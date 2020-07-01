@@ -16,7 +16,6 @@ class _YeniGorevState extends State<YeniGorev> {
   TextEditingController controller = TextEditingController();
   DateTime selectedDate = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
-  List<Gorevler> gorevler = new List();
   @override
   Widget build(BuildContext context) {
     //initializeDateFormatting('tr', null);
@@ -209,15 +208,3 @@ Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-
-class Gorevler {
-  final String id;
-  final String title;
-  final DateTime date;
-
-  Gorevler({
-    @required this.id,
-    @required this.title,
-    @required this.date,
-  });
-}

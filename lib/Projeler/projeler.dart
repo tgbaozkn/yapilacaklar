@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yapilacaklar/anasayfa/ui/altmenubar.dart';
-import '../anasayfa/anasayfa.dart';
+import '../Anasayfa/ui/altmenubar.dart';
 import './ui/appbar2.dart';
+import '../Anasayfa/anasayfa.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Projeler extends StatefulWidget {
@@ -10,13 +10,9 @@ class Projeler extends StatefulWidget {
 }
 
 class _ProjelerState extends State<Projeler> {
+  bool gorunur = false;
   @override
   Widget build(BuildContext context) {
-    Function _git = () {
-      print("calisti");
-      Navigator.push(context,
-          MaterialPageRoute<void>(builder: (context) => Yapilacaklar()));
-    };
     final double boy = MediaQuery.of(context).size.height;
     final double en = MediaQuery.of(context).size.width;
     return Stack(
@@ -73,15 +69,30 @@ class _ProjelerState extends State<Projeler> {
             ),
           ),
         ),
+        if (gorunur)
+          AnimatedContainer(
+              duration: Duration(milliseconds: 400), child: Yapilacaklar())
+        else
+          Container(),
         Container(
           margin: EdgeInsets.only(top: boy * 0.885),
           height: boy * 0.125,
-          child: AltMenuBar(() {},
-              sayfaGecis: () {},
-              //bottomnavigationbar-scaffold
-              aktif1: false,
-              aktif2: true,
-              git: _git),
+          child: AltMenuBar(
+            aktif1: gorunur ? true : false,
+            aktif2: gorunur ? false : true,
+            git: () {
+              setState(() {
+                print("girise basildi");
+                gorunur = true;
+              });
+            },
+            sayfaGecis: () {
+              setState(() {
+                gorunur = false;
+                print("a");
+              });
+            },
+          ),
         ),
       ],
     );

@@ -4,8 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../Anasayfa/ui/yenigorev.dart';
 
 class Hatirlatici extends StatelessWidget {
-  List<Gorevler> gorevler;
-  Hatirlatici({this.gorevler});
   @override
   Widget build(BuildContext context) {
     double en = MediaQuery.of(context).size.width;

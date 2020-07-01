@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../anasayfa/ui/Photo.dart';
 import 'hatirlatici.dart';
-import 'yenigorev.dart';
+import '../../Anasayfa/ui/yenigorev.dart';
 
 class AppBarTwo extends StatefulWidget {
   int a = 0;
-  List<Gorevler> gorevler;
-  AppBarTwo(this.a, {this.gorevler});
+
+  AppBarTwo(
+    this.a,
+  );
   @override
   _AppBarTwoState createState() => _AppBarTwoState();
 }

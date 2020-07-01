@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:yapilacaklar/anasayfa/ui/altmenubar.dart';
+import 'ui/altmenubar.dart';
 import '../Projeler/projeler.dart';
 import '../Projeler/ui/appbar2.dart';
 import 'ui/appbar.dart';
 import 'ui/yenigorev.dart';
 
 class Yapilacaklar extends StatefulWidget {
-  Yapilacaklar();
   @override
   _YapilacaklarState createState() => _YapilacaklarState();
 }
 
 class _YapilacaklarState extends State<Yapilacaklar> {
-  List<Gorevler> gorevler = [];
   double gorevyazMargin = 1;
   double opacity = 0;
-  bool clicked = false;
   bool gorunur = false;
-
+  bool olustur = false;
   /* void gorevEkle() {
     setState(() {
       int index = _gorevler.length;
@@ -31,8 +28,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     return Material(
       child: Stack(
         children: <Widget>[
-          // if (widget?.gorevler?.isEmpty ?? true)
-          clicked ? gorevVar(gorevler, context) : gorevYok(context),
+          if (olustur) gorevVar(context) else gorevYok(context),
           //else
           // gorevVar(widget.gorevler, context),
           Container(
@@ -41,21 +37,22 @@ class _YapilacaklarState extends State<Yapilacaklar> {
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.5,
             child: AltMenuBar(
-              () {
+              gorevekle: () {
                 setState(() {
                   gorevyazMargin = 0.14;
                   opacity = 0.35;
                 });
               },
               sayfaGecis: () {
+                //projelere gecis
                 setState(() {
                   gorunur = true;
-                  print("t");
+
                   //MaterialPageRoute<void>(builder: (context) => Projeler());
                 });
               },
-              aktif1: false,
-              aktif2: false,
+              aktif1: gorunur ? false : true,
+              aktif2: gorunur ? true : false,
             ),
           ),
           if (gorevyazMargin == 0.14)
@@ -82,7 +79,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
               },
               olustur: () {
                 setState(() {
-                  clicked = true;
+                  olustur = true;
                 });
               },
             ),
@@ -161,16 +158,16 @@ Widget gorevYok(BuildContext context) {
 }
 
 //gorevvarken gorunum
-Widget gorevVar(List<Gorevler> _gorevler, BuildContext context) {
+Widget gorevVar(BuildContext context) {
   return SingleChildScrollView(
     child: Column(
       children: [
         AppBarTwo(
           1,
-          gorevler: _gorevler,
         ),
         Column(
           children: <Widget>[
+            Text("gorev var")
             //_gorevler.map((e) =>)
           ],
         )

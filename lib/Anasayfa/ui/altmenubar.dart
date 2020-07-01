@@ -9,10 +9,12 @@ class AltMenuBar extends StatefulWidget {
   bool aktif1;
   bool aktif2;
 
-  AltMenuBar(this.gorevekle, //yenigorev olustur
+  AltMenuBar(
+      //yenigorev olustur
       {this.sayfaGecis,
       this.aktif1,
       this.aktif2,
+      this.gorevekle,
       this.git});
 
   @override
@@ -46,8 +48,9 @@ class _AltMenuBarState extends State<AltMenuBar> {
                             : Color(0xFFBEBEBE),
                       ),
                       onPressed: () {
-                        widget.git; //giris sayfasına götüren fonk
-                        print("giris");
+                        setState(() {
+                          widget.git(); //giris sayfasına götüren fonk
+                        });
                       },
                     ),
                     Text(
