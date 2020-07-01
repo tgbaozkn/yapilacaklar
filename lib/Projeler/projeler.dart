@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import '../Anasayfa/ui/altmenubar.dart';
 import './ui/appbar2.dart';
 import '../Anasayfa/anasayfa.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'ui/projeolustur.dart';
+import 'ui/icons/alisveris.dart';
+import 'ui/icons/Kisisel.dart';
+import 'ui/icons/Is.dart';
+import 'ui/icons/Bulusma.dart';
+import 'ui/icons/Ders.dart';
+import 'ui/icons/Parti.dart';
 
 class Projeler extends StatefulWidget {
   @override
@@ -10,6 +16,8 @@ class Projeler extends StatefulWidget {
 }
 
 class _ProjelerState extends State<Projeler> {
+  double gorevyazMargin = 1;
+  double opacity = 0;
   bool gorunur = false;
   @override
   Widget build(BuildContext context) {
@@ -28,52 +36,59 @@ class _ProjelerState extends State<Projeler> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Text("Projeler"),
+                      Text(
+                        "   Projeler",
+                        style: TextStyle(
+                          fontSize: boy * 0.025,
+                          fontFamily: 'Rubik-Medium',
+                          color: Color(0xff8B87B3),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       SizedBox(
-                        width: 80,
+                        width: en * 0.4,
                       ),
                       Container(
+                        width: en * 0.36,
+                        height: boy * 0.032,
                         child: Center(
                             child: Text(
                           "Yeni Proje",
                           style: TextStyle(
-                            fontFamily: 'OpenSans',
+                            fontFamily: 'Rubik-Medium',
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.03,
+                            fontSize:
+                                MediaQuery.of(context).size.height * 0.018,
                           ),
                         )),
-                        width: MediaQuery.of(context).size.width * 0.38,
-                        height: MediaQuery.of(context).size.height * 0.08,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(5),
                           gradient: LinearGradient(
                             colors: [
-                              Color(0xFF5DE61A),
-                              Color(0xFF39A801),
+                              Color(0xFFF857C3),
+                              Color(0xFFE0139C),
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                                blurRadius: 30,
-                                offset: Offset(0, 5),
-                                color: Color(0xFF66C81C)),
+                                blurRadius: 9,
+                                offset: Offset(0, 7),
+                                color: Color(0xFFF456C3).withOpacity(0.47)),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                liste(context)
+                liste(context),
+                SizedBox(
+                  height: boy * 0.1,
+                )
               ],
             ),
           ),
         ),
-        if (gorunur)
-          AnimatedContainer(
-              duration: Duration(milliseconds: 400), child: Yapilacaklar())
-        else
-          Container(),
         Container(
           margin: EdgeInsets.only(top: boy * 0.885),
           height: boy * 0.125,
@@ -92,8 +107,55 @@ class _ProjelerState extends State<Projeler> {
                 print("a");
               });
             },
+            gorevekle: () {
+              setState(() {
+                gorevyazMargin = 0.14;
+                opacity = 0.5;
+              });
+            },
           ),
         ),
+        if (gorevyazMargin == 0.14)
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            color: Colors.black.withOpacity(opacity),
+            width: double.infinity,
+            height: double.infinity,
+          )
+        else
+          Container(),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * gorevyazMargin),
+          child: YeniProje(
+            onTap: () {
+              setState(
+                () {
+                  gorevyazMargin = 1;
+                  opacity = 0;
+                },
+              );
+            },
+            olustur: () {
+              setState(() {});
+            },
+          ),
+        ),
+        if (gorunur)
+          AnimatedContainer(
+            height: double.infinity,
+            width: double.infinity,
+            duration: Duration(milliseconds: 400),
+            child: Projeler(),
+          )
+        else
+          Container(),
+        if (gorunur)
+          AnimatedContainer(
+              duration: Duration(milliseconds: 400), child: Yapilacaklar())
+        else
+          Container(),
       ],
     );
   }
@@ -106,68 +168,82 @@ Widget liste(BuildContext context) {
       children: [
         Row(
           children: [
-            container(context, task: "task", text: "text"),
-            container(context, task: "task", text: "text"),
+            container(context,
+                widget: Kisisel(), task: "task", text: "Kişisel"),
+            container(context, widget: Is(), task: "task", text: "İş"),
           ],
         ),
         Row(
           children: [
-            container(context, task: "task", text: "text"),
-            container(context, task: "task", text: "text"),
+            container(context,
+                widget: Bulusma(), task: "task", text: "Buluşma"),
+            container(context,
+                widget: alisveris(), task: "task", text: "Alışveriş"),
           ],
         ),
         Row(
           children: [
-            container(context, task: "task", text: "text"),
-            container(context, task: "task", text: "text"),
+            container(context, widget: parti(), task: "task", text: "Parti"),
+            container(context, widget: ders(), task: "task", text: "Ders"),
           ],
-        )
+        ),
       ],
     ),
   );
 }
 
 Widget container(BuildContext context,
-    {Color colo, String image, String text, String task}) {
+    {Widget widget, String text, String task}) {
   final double boy = MediaQuery.of(context).size.height;
   final double en = MediaQuery.of(context).size.width;
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: EdgeInsets.fromLTRB(18, 0, 0, 24),
     child: Stack(
       children: [
         Container(
-          height: boy * 0.3,
+          height: boy * 0.25,
           width: en * 0.42,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
                 blurRadius: 3,
                 offset: Offset(0, 5),
-                color: Colors.black.withOpacity(0.5),
+                color: Color(0xffBBBBBB).withOpacity(0.35),
               ),
             ],
           ),
         ),
         Positioned(
-          left: en * 0.15,
-          top: boy * 0.1,
+          left: en * 0.14,
+          top: boy * 0.06,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: boy * 0.06,
-                height: boy * 0.065,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.all(Radius.elliptical(26.5, 26.5)),
-                ),
-                child: SvgPicture.string(
-                  _svg_i8kqcq,
-                  allowDrawingOutsideViewBox: true,
+              widget,
+              Padding(
+                padding: EdgeInsets.only(top: 6.8),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                      fontSize: boy * 0.024,
+                      color: Color(0xff686868),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Rubik-Medium'),
                 ),
               ),
-              Text(text),
-              Text(task),
+              Padding(
+                padding: EdgeInsets.only(top: boy * 0.012),
+                child: Text(
+                  task,
+                  style: TextStyle(
+                      fontSize: boy * 0.012,
+                      color: Color(0xffA1A1A1),
+                      fontFamily: 'Rubik-Regular'),
+                ),
+              ),
             ],
           ),
         ),

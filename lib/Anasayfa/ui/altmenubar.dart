@@ -36,7 +36,7 @@ class _AltMenuBarState extends State<AltMenuBar> {
             children: [
               //giriş
               Padding(
-                padding: EdgeInsets.only(left: boy * 0.025, right: boy * 0.1),
+                padding: EdgeInsets.only(left: boy * 0.025, right: boy * 0.09),
                 child: Column(
                   children: [
                     IconButton(
@@ -114,40 +114,41 @@ class _AltMenuBarState extends State<AltMenuBar> {
           ),
         ),
         //ekle butonu
-        Positioned(
-          left: en * 0.445,
-          bottom: boy * 0.05,
-          child: Container(
-            width: boy * 0.065,
-            height: boy * 0.065,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.elliptical(26.5, 26.5)),
-              gradient: LinearGradient(
-                colors: [const Color(0xfff857c3), const Color(0xffe0139c)],
-                stops: [0.0, 1.0],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0x78f456c3),
-                  offset: Offset(0, 7),
-                  blurRadius: 9,
+        Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Stack(children: [
+            Center(
+              child: Container(
+                width: boy * 0.065,
+                height: boy * 0.065,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.elliptical(26.5, 26.5)),
+                  gradient: LinearGradient(
+                    colors: [const Color(0xfff857c3), const Color(0xffe0139c)],
+                    stops: [0.0, 1.0],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0x78f456c3),
+                      offset: Offset(0, 7),
+                      blurRadius: 9,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-        Positioned(
-          left: en * 0.435,
-          bottom: boy * 0.045,
-          child: IconButton(
-              iconSize: boy * 0.055,
-              color: Colors.white,
-              icon: Icon(Icons.add),
-              onPressed: () {
-                widget.gorevekle();
-                print("eklendi");
-              }),
-        ),
+            Container(
+              alignment: Alignment.center,
+              height: boy * 0.055,
+              child: IconButton(
+                  color: Colors.white,
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    widget.gorevekle();
+                    print("eklendi");
+                  }),
+            ),
+          ]),
+        ]),
       ],
     );
   }

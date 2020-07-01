@@ -31,7 +31,7 @@ class Hatirlatici extends StatelessWidget {
               Stack(
             children: <Widget>[
               Transform.translate(
-                offset: Offset(71.97, 0.0),
+                offset: Offset(41.97, 0.0),
                 child: Stack(
                   children: <Widget>[
                     SvgPicture.string(
@@ -42,7 +42,7 @@ class Hatirlatici extends StatelessWidget {
                 ),
               ),
               Transform.translate(
-                offset: Offset(53.62, 8.48),
+                offset: Offset(23.62, 8.48),
                 child: SvgPicture.string(
                   _svg_i8kqcq,
                   allowDrawingOutsideViewBox: true,
