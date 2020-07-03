@@ -31,7 +31,7 @@ class _ProjelerState extends State<Projeler> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                AppBarTwo(3),
+                AppBarTwo(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(

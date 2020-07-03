@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:yapilacaklar/ui/yenigorev.dart';
 
+import '../anasayfa.dart';
 import 'secenekler.dart';
 
 class YeniGorev extends StatefulWidget {
@@ -12,8 +14,12 @@ class YeniGorev extends StatefulWidget {
   _YeniGorevState createState() => _YeniGorevState();
 }
 
+//burası yandaki sayfa yeni görev ekle sayfası
 class _YeniGorevState extends State<YeniGorev> {
-  TextEditingController controller = TextEditingController();
+  String not;
+  List<Gorevler> gorevler = List();
+  var formKey = GlobalKey<FormState>();
+  //TextEditingController controller = TextEditingController();
   DateTime selectedDate = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
   @override
@@ -24,6 +30,7 @@ class _YeniGorevState extends State<YeniGorev> {
     return SingleChildScrollView(
       child: Stack(
         children: [
+          //arka fon
           Container(
             margin: EdgeInsets.only(top: 20),
             width: double.infinity,
@@ -35,6 +42,7 @@ class _YeniGorevState extends State<YeniGorev> {
                   topRight: Radius.elliptical(300, 60.5)),
             ),
           ),
+          //kapatma dugmesi
           Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(left: en * 0.45),
@@ -55,6 +63,7 @@ class _YeniGorevState extends State<YeniGorev> {
               ],
             ),
           ),
+          //kapatma dugmesinin "x" sembolu
           Container(
             margin: EdgeInsets.only(left: 5),
             alignment: Alignment.center,
@@ -66,6 +75,7 @@ class _YeniGorevState extends State<YeniGorev> {
             ),
           ),
           Column(
+            //yeni gorev ekle baslıgı ,text field ve görev konusu
             children: [
               SizedBox(
                 height: boy * 0.08,
@@ -80,28 +90,38 @@ class _YeniGorevState extends State<YeniGorev> {
                       fontWeight: FontWeight.w600),
                 ),
               ),
+              //text field -gorevin girlecegi kısım
               Container(
                 margin: EdgeInsets.only(left: en * 0.05, top: en * 0.1),
                 width: en * 0.88,
-                child: TextField(
+                child: TextFormField(
+                  key: formKey,
                   style: TextStyle(
                     color: Color(0xff373737),
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  onSubmitted: (value) {},
-                  controller: controller,
+                  //onSubmitted: (value) {},
+                  // controller: controller,
+                  onSaved: (deger) {
+                    not = deger;
+                    // for (int i = 0; i <= gorevler.length; i++)
+                    //   gorevler[i].title = not;
+                  },
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
-              Secenekler(),
+              Secenekler(), //kisiel is bulusma yazan kısım gorev kriterleri
               Divider(
+                //alt cizgi
+                // bu alttakş çizgi
                 indent: en * 0.09,
                 endIndent: en * 0.03,
                 thickness: 0.6,
                 color: Colors.black,
               ),
               FlatButton(
+                //tarih ve saat seçimi
                 onPressed: () async {
                   final selectedDate = await _selectDateTime(context);
                   if (selectedDate == null) return;
@@ -123,6 +143,7 @@ class _YeniGorevState extends State<YeniGorev> {
                   });
                 },
                 child: Row(
+                  //tarih seç başlığı
                   children: [
                     SizedBox(
                       width: en * 0.05,
@@ -140,15 +161,15 @@ class _YeniGorevState extends State<YeniGorev> {
                     ? DateFormat('Bugün,HH:mm').format(selectedDate)
                     : DateFormat('EEE,HH:mm').format(selectedDate)),
               ),
-              //Text(Jiffy(selectedDate).format('EEE,HH:dd')) //Mon,18:22,
               SizedBox(height: boy * 0.098),
               olustur(context, () {
+                //kaydetme
                 setState(() {
-                  print("basıldı");
-                  String text = controller.text;
-                  print(text);
-                  selectedDate;
-                  print(selectedDate);
+                  formKey.currentState.save();
+
+                  selectedDate.hour;
+                  selectedDate.minute;
+                  print("$selectedDate.hour : $selectedDate.minute");
                 });
               }),
             ],
@@ -210,3 +231,15 @@ Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
+
+abstract class Gorevler {
+  String id;
+  String title;
+  int date = DateTime.now().hour;
+
+  Gorevler({
+    @required this.id,
+    @required this.title,
+    @required this.date,
+  });
+}

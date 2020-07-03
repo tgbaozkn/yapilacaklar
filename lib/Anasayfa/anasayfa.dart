@@ -12,10 +12,12 @@ class Yapilacaklar extends StatefulWidget {
 }
 
 class _YapilacaklarState extends State<Yapilacaklar> {
-  double gorevyazMargin = 1;
+  double gorevyazMargin =
+      1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
   double opacity = 0;
   bool gorunur = false;
-  bool olustur = false;
+  bool olustur = true;
+
   /* void gorevEkle() {
     setState(() {
       int index = _gorevler.length;
@@ -28,7 +30,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     return Material(
       child: Stack(
         children: <Widget>[
-          if (olustur) gorevVar(context) else gorevYok(context),
+          if (olustur) gorevVar(context, gorevler: []) else gorevYok(context),
           //else
           // gorevVar(widget.gorevler, context),
           Container(
@@ -37,6 +39,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.5,
             child: AltMenuBar(
+              //bu artı butonuna bastıgımda top margin 0.14 olsun yakalssin
               gorevekle: () {
                 setState(() {
                   gorevyazMargin = 0.14;
@@ -55,20 +58,23 @@ class _YapilacaklarState extends State<Yapilacaklar> {
               aktif2: gorunur ? true : false,
             ),
           ),
-          if (gorevyazMargin == 0.14)
+          if (gorevyazMargin ==
+              0.14) //eger yaklasmissa ekranın arkasını golgele
             AnimatedContainer(
               duration: const Duration(milliseconds: 400),
-              color: Colors.black.withOpacity(opacity),
+              color: Colors.black.withOpacity(opacity), //bursı golge
               width: double.infinity,
               height: double.infinity,
             )
           else
-            Container(),
+            Container(), //degilse bos container dondur
           AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * gorevyazMargin),
+                top: MediaQuery.of(context).size.height *
+                    gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
             child: YeniGorev(
+              //childe buna gore ayarlanır
               onTap: () {
                 setState(
                   () {
@@ -158,16 +164,23 @@ Widget gorevYok(BuildContext context) {
 }
 
 //gorevvarken gorunum
-Widget gorevVar(BuildContext context) {
+Widget gorevVar(BuildContext context, {List<Gorevler> gorevler}) {
   return SingleChildScrollView(
     child: Column(
       children: [
-        AppBarTwo(
-          1,
-        ),
+        AppBarTwo(a: gorevler.length, gorevler: gorevler),
         Column(
           children: <Widget>[
-            Text("gorev var")
+            Text("gorev var"),
+            /* ListView.builder(
+                shrinkWrap: true,
+                itemCount: gorevler.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(gorevler[index].title),
+                  );
+                })*/
+
             //_gorevler.map((e) =>)
           ],
         )

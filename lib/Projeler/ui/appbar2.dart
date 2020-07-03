@@ -6,10 +6,11 @@ import '../../Anasayfa/ui/yenigorev.dart';
 
 class AppBarTwo extends StatefulWidget {
   int a = 0;
-
+  List<Gorevler> gorevler;
   AppBarTwo(
-    this.a,
-  );
+      {this.a //kac gorev kaldigini gosterir
+      ,
+      this.gorevler});
   @override
   _AppBarTwoState createState() => _AppBarTwoState();
 }
@@ -108,7 +109,7 @@ class _AppBarTwoState extends State<AppBarTwo> {
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.09,
             ),
-            Hatirlatici(),
+            Hatirlatici(gorevler: widget.gorevler),
           ],
         ),
       ],
