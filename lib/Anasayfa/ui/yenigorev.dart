@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:yapilacaklar/ui/yenigorev.dart';
-
-import '../anasayfa.dart';
+import '../ui/Gorev.dart';
+import '../anasayfaPage.dart';
 import 'secenekler.dart';
 
 class YeniGorev extends StatefulWidget {
-  Function onTap;
-  Function olustur;
-  YeniGorev({this.onTap, this.olustur});
+  Function onTap, gorevEkle;
+
+  YeniGorev({this.onTap, this.gorevEkle});
 
   @override
   _YeniGorevState createState() => _YeniGorevState();
@@ -17,11 +16,33 @@ class YeniGorev extends StatefulWidget {
 //burası yandaki sayfa yeni görev ekle sayfası
 class _YeniGorevState extends State<YeniGorev> {
   String not;
-  List<Gorevler> gorevler = List();
+  List<Gorev> gorevler;
   var formKey = GlobalKey<FormState>();
   //TextEditingController controller = TextEditingController();
   DateTime selectedDate = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
+  void _submitData() {
+    if (not == null) {
+      return;
+    }
+    final enteredName = not;
+
+    if (enteredName.isEmpty || selectedDate == null) {
+      return;
+    }
+
+    widget.gorevEkle(
+      enteredName,
+      selectedDate,
+    );
+    final Gorev gorev =
+        Gorev(title: enteredName, date: selectedDate.toString());
+    gorevler.add(gorev);
+    print('eklendi');
+
+    // CloseBox functionu yazılması gerekiyor..
+  }
+
   @override
   Widget build(BuildContext context) {
     //initializeDateFormatting('tr', null);
@@ -94,20 +115,17 @@ class _YeniGorevState extends State<YeniGorev> {
               Container(
                 margin: EdgeInsets.only(left: en * 0.05, top: en * 0.1),
                 width: en * 0.88,
-                child: TextFormField(
+                child: TextField(
                   key: formKey,
                   style: TextStyle(
                     color: Color(0xff373737),
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  //onSubmitted: (value) {},
-                  // controller: controller,
-                  onSaved: (deger) {
-                    not = deger;
-                    // for (int i = 0; i <= gorevler.length; i++)
-                    //   gorevler[i].title = not;
+                  onSubmitted: (value) {
+                    _submitData();
                   },
+                  onChanged: (value) => not = value,
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
@@ -164,13 +182,10 @@ class _YeniGorevState extends State<YeniGorev> {
               SizedBox(height: boy * 0.098),
               olustur(context, () {
                 //kaydetme
-                setState(() {
-                  formKey.currentState.save();
-
-                  selectedDate.hour;
-                  selectedDate.minute;
-                  print("$selectedDate.hour : $selectedDate.minute");
-                });
+                _submitData();
+                // selectedDate.hour;
+                // selectedDate.minute;
+                // print("$selectedDate.hour : $selectedDate.minute");
               }),
             ],
           ),
@@ -183,7 +198,6 @@ class _YeniGorevState extends State<YeniGorev> {
 Widget olustur(BuildContext context, Function func) {
   return GestureDetector(
     onTap: () {
-      print("Olusturuldu");
       func();
     },
     child: Container(
@@ -231,15 +245,3 @@ Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-
-abstract class Gorevler {
-  String id;
-  String title;
-  int date = DateTime.now().hour;
-
-  Gorevler({
-    @required this.id,
-    @required this.title,
-    @required this.date,
-  });
-}

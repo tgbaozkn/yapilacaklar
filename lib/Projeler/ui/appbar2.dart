@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../anasayfa/ui/Photo.dart';
+import '../../Anasayfa/ui/Photo.dart';
 import 'hatirlatici.dart';
-import '../../Anasayfa/ui/yenigorev.dart';
+import '../../Anasayfa/ui/Gorev.dart';
 
 class AppBarTwo extends StatefulWidget {
-  int a = 0;
-  List<Gorevler> gorevler;
-  AppBarTwo(
-      {this.a //kac gorev kaldigini gosterir
-      ,
-      this.gorevler});
+  int gorevsayisi = 0;
+  // List<> ;
+  AppBarTwo({this.gorevsayisi //kac gorev kaldigini gosterir
+      });
   @override
   _AppBarTwoState createState() => _AppBarTwoState();
 }
@@ -18,7 +16,7 @@ class AppBarTwo extends StatefulWidget {
 class _AppBarTwoState extends State<AppBarTwo> {
   @override
   Widget build(BuildContext context) {
-    String sayi = widget.a.toString();
+    String sayi = widget.gorevsayisi.toString();
     return Stack(
       children: [
         Container(
@@ -109,7 +107,7 @@ class _AppBarTwoState extends State<AppBarTwo> {
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.09,
             ),
-            Hatirlatici(gorevler: widget.gorevler),
+            Hatirlatici(),
           ],
         ),
       ],

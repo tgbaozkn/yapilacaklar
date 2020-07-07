@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Anasayfa/ui/altmenubar.dart';
 import './ui/appbar2.dart';
-import '../Anasayfa/anasayfa.dart';
+import '../Anasayfa/anasayfaPage.dart';
 import 'ui/projeolustur.dart';
 import 'ui/icons/alisveris.dart';
 import 'ui/icons/Kisisel.dart';
@@ -48,34 +48,42 @@ class _ProjelerState extends State<Projeler> {
                       SizedBox(
                         width: en * 0.4,
                       ),
-                      Container(
-                        width: en * 0.36,
-                        height: boy * 0.032,
-                        child: Center(
-                            child: Text(
-                          "Yeni Proje",
-                          style: TextStyle(
-                            fontFamily: 'Rubik-Medium',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.018,
-                          ),
-                        )),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFF857C3),
-                              Color(0xFFE0139C),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            gorevyazMargin = 0.14;
+                            opacity = 0.5;
+                          });
+                        },
+                        child: Container(
+                          width: en * 0.36,
+                          height: boy * 0.032,
+                          child: Center(
+                              child: Text(
+                            "Yeni Proje",
+                            style: TextStyle(
+                              fontFamily: 'Rubik-Medium',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.018,
+                            ),
+                          )),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFF857C3),
+                                Color(0xFFE0139C),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 9,
+                                  offset: Offset(0, 7),
+                                  color: Color(0xFFF456C3).withOpacity(0.47)),
                             ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 9,
-                                offset: Offset(0, 7),
-                                color: Color(0xFFF456C3).withOpacity(0.47)),
-                          ],
                         ),
                       ),
                     ],

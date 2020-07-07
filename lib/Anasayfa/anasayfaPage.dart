@@ -5,6 +5,7 @@ import '../Projeler/projeler.dart';
 import '../Projeler/ui/appbar2.dart';
 import 'ui/appbar.dart';
 import 'ui/yenigorev.dart';
+import 'ui/Gorev.dart';
 
 class Yapilacaklar extends StatefulWidget {
   @override
@@ -16,12 +17,19 @@ class _YapilacaklarState extends State<Yapilacaklar> {
       1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
   double opacity = 0;
   bool gorunur = false;
-  bool olustur = true;
+  List<Gorev> gorevler;
+  List<Widget> listesi = [for (var i = 0; i < 7; i++) Text("liste elemanı")];
+  void gorevEkle(String name, String date) {
+    final gorev = Gorev(title: name, date: date);
+    setState(() {
+      gorevler.add(gorev);
+    });
+  }
 
   /* void gorevEkle() {
     setState(() {
-      int index = _gorevler.length;
-      //_gorevler.add('Gorev' + index.toString());
+      int index = _.length;
+      //_.add('Gorev' + index.toString());
     });
   }*/
 
@@ -30,9 +38,12 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     return Material(
       child: Stack(
         children: <Widget>[
-          if (olustur) gorevVar(context, gorevler: []) else gorevYok(context),
+          if (listesi.length > 0)
+            gorevVar(context, list: gorevler)
+          else
+            gorevYok(context),
           //else
-          // gorevVar(widget.gorevler, context),
+          // gorevVar(widget., context),
           Container(
             margin:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
@@ -50,7 +61,6 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                 //projelere gecis
                 setState(() {
                   gorunur = true;
-
                   //MaterialPageRoute<void>(builder: (context) => Projeler());
                 });
               },
@@ -83,11 +93,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                   },
                 );
               },
-              olustur: () {
-                setState(() {
-                  olustur = true;
-                });
-              },
+              gorevEkle: gorevEkle,
             ),
           ),
           if (gorunur)
@@ -164,24 +170,25 @@ Widget gorevYok(BuildContext context) {
 }
 
 //gorevvarken gorunum
-Widget gorevVar(BuildContext context, {List<Gorevler> gorevler}) {
+Widget gorevVar(BuildContext context, {List<Gorev> list}) {
   return SingleChildScrollView(
     child: Column(
       children: [
-        AppBarTwo(a: gorevler.length, gorevler: gorevler),
+        // AppBarTwo(gorevsayisi: .length, : ),
         Column(
           children: <Widget>[
-            Text("gorev var"),
-            /* ListView.builder(
-                shrinkWrap: true,
-                itemCount: gorevler.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(gorevler[index].title),
-                  );
-                })*/
-
-            //_gorevler.map((e) =>)
+            Center(child: Text("gorev var")),
+            ListTile(
+              title: Text(list[0].title),
+            ),
+            // ListView.builder(
+            //     shrinkWrap: true,
+            //     itemCount: list.length,
+            //     itemBuilder: (context, index) {
+            //       return ListTile(
+            //         title: Text(list[index].title),
+            //       );
+            //     })
           ],
         )
       ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../anasayfa/anasayfa.dart';
+import '../../Anasayfa/anasayfaPage.dart';
 
 class Baslayalim extends StatelessWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../anasayfa.dart';
+import '../anasayfaPage.dart';
 import 'package:yapilacaklar/Projeler/projeler.dart';
 
 class AltMenuBar extends StatefulWidget {
@@ -144,7 +144,6 @@ class _AltMenuBarState extends State<AltMenuBar> {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     widget.gorevekle();
-                    print("eklendi");
                   }),
             ),
           ]),

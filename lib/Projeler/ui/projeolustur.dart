@@ -127,8 +127,6 @@ class _YeniProjeState extends State<YeniProje> {
                     print("basıldı");
                     String text = controller.text;
                     print(text);
-                    selectedDate;
-                    print(selectedDate);
                   });
                 }),
               ),
