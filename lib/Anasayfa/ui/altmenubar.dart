@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import '../anasayfaPage.dart';
-import 'package:yapilacaklar/Projeler/projeler.dart';
 
 class AltMenuBar extends StatefulWidget {
-  Function gorevekle, sayfaGecis, git;
-  bool aktif1;
-  bool aktif2;
+  final Function gorevekle, sayfaGecis, git;
+  final bool aktif1;
+  final bool aktif2;
 
   AltMenuBar(
       //yenigorev olustur
@@ -27,6 +23,8 @@ class _AltMenuBarState extends State<AltMenuBar> {
     final boy = MediaQuery.of(context).size.height;
     final en = MediaQuery.of(context).size.width;
 
+    // TODO: TABBAR
+
     return Stack(
       children: [
         //giriş projeler yazan kısım
@@ -43,9 +41,7 @@ class _AltMenuBarState extends State<AltMenuBar> {
                       iconSize: boy * 0.04,
                       icon: Icon(
                         Icons.home,
-                        color: widget.aktif1
-                            ? Color(0xff5F87E7)
-                            : Color(0xFFBEBEBE),
+                        color: widget.aktif1 ? Color(0xff5F87E7) : Color(0xFFBEBEBE),
                       ),
                       onPressed: () {
                         setState(() {
@@ -56,9 +52,7 @@ class _AltMenuBarState extends State<AltMenuBar> {
                     Text(
                       "Giriş",
                       style: TextStyle(
-                          color: widget.aktif1
-                              ? Color(0xff5F87E7)
-                              : Color(0xFFBEBEBE),
+                          color: widget.aktif1 ? Color(0xff5F87E7) : Color(0xFFBEBEBE),
                           fontSize: (boy * 0.02),
                           fontFamily: 'Rubik-Regular'),
                     ),
@@ -87,9 +81,7 @@ class _AltMenuBarState extends State<AltMenuBar> {
                       iconSize: boy * 0.04,
                       icon: Icon(
                         Icons.apps,
-                        color: widget.aktif2
-                            ? Color(0xff5F87E7)
-                            : Color(0xFFBEBEBE),
+                        color: widget.aktif2 ? Color(0xff5F87E7) : Color(0xFFBEBEBE),
                       ),
                       onPressed: () {
                         print("projeler");
@@ -101,9 +93,7 @@ class _AltMenuBarState extends State<AltMenuBar> {
                     Text(
                       "Projeler",
                       style: TextStyle(
-                          color: widget.aktif2
-                              ? Color(0xff5F87E7)
-                              : Color(0xFFBEBEBE),
+                          color: widget.aktif2 ? Color(0xff5F87E7) : Color(0xFFBEBEBE),
                           fontSize: (boy * 0.02),
                           fontFamily: 'Rubik-Regular'),
                     ),

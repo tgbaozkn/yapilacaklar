@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'ui/altmenubar.dart';
+
 import '../Projeler/projeler.dart';
-import '../Projeler/ui/appbar2.dart';
+import 'ui/Gorev.dart';
+import 'ui/altmenubar.dart';
 import 'ui/appbar.dart';
 import 'ui/yenigorev.dart';
-import 'ui/Gorev.dart';
 
 class Yapilacaklar extends StatefulWidget {
   @override
@@ -17,8 +17,9 @@ class _YapilacaklarState extends State<Yapilacaklar> {
       1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
   double opacity = 0;
   bool gorunur = false;
-  List<Gorev> gorevler;
-  List<Widget> listesi = [for (var i = 0; i < 7; i++) Text("liste elemanı")];
+  List<Gorev> gorevler = [];
+  List<Widget> listesi = List.generate(7, (index) => Text("liste elemanı"));
+
   void gorevEkle(String name, String date) {
     final gorev = Gorev(title: name, date: date);
     setState(() {
@@ -34,166 +35,185 @@ class _YapilacaklarState extends State<Yapilacaklar> {
   }*/
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  bool get isWorkMargin => gorevyazMargin == 0.14;
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
+    return Scaffold(
+      bottomNavigationBar: buildContainerBottomMenu(context),
+      body: Stack(
         children: <Widget>[
-          if (listesi.length > 0)
-            gorevVar(context, list: gorevler)
-          else
-            gorevYok(context),
-          //else
-          // gorevVar(widget., context),
-          Container(
-            margin:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: AltMenuBar(
-              //bu artı butonuna bastıgımda top margin 0.14 olsun yakalssin
-              gorevekle: () {
-                setState(() {
-                  gorevyazMargin = 0.14;
-                  opacity = 0.35;
-                });
-              },
-              sayfaGecis: () {
-                //projelere gecis
-                setState(() {
-                  gorunur = true;
-                  //MaterialPageRoute<void>(builder: (context) => Projeler());
-                });
-              },
-              aktif1: gorunur ? false : true,
-              aktif2: gorunur ? true : false,
-            ),
-          ),
-          if (gorevyazMargin ==
-              0.14) //eger yaklasmissa ekranın arkasını golgele
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
-              color: Colors.black.withOpacity(opacity), //bursı golge
-              width: double.infinity,
-              height: double.infinity,
-            )
-          else
-            Container(), //degilse bos container dondur
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height *
-                    gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
-            child: YeniGorev(
-              //childe buna gore ayarlanır
-              onTap: () {
-                setState(
-                  () {
-                    gorevyazMargin = 1;
-                    opacity = 0;
-                  },
-                );
-              },
-              gorevEkle: gorevEkle,
-            ),
-          ),
-          if (gorunur)
-            AnimatedContainer(
-              height: double.infinity,
-              width: double.infinity,
-              duration: Duration(milliseconds: 400),
-              child: Projeler(),
-            )
-          else
-            Container()
+          buildVisibilityWorkAvaible(context),
+          buildVisibilityWorkArea(),
+          buildAnimatedContainerAddTask(context),
+          buildVisibilityContainer()
         ],
       ),
     );
   }
-}
+
+  Visibility buildVisibilityContainer() {
+    return Visibility(
+        visible: gorunur,
+        child: AnimatedContainer(
+          height: double.infinity,
+          width: double.infinity,
+          duration: Duration(milliseconds: 400),
+          child: Projeler(),
+        ));
+  }
+
+  AnimatedContainer buildAnimatedContainerAddTask(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height *
+              gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
+      child: YeniGorev(
+        //childe buna gore ayarlanır
+        onTap: () {
+          setState(
+            () {
+              gorevyazMargin = 1;
+              opacity = 0;
+            },
+          );
+        },
+        gorevEkle: gorevEkle,
+      ),
+    );
+  }
+
+  Visibility buildVisibilityWorkArea() {
+    return Visibility(
+      visible: isWorkMargin,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
+        color: Colors.black.withOpacity(opacity), //bursı golge
+        width: double.infinity,
+        height: double.infinity,
+      ),
+      replacement: Container(),
+    );
+  }
+
+  Container buildContainerBottomMenu(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: AltMenuBar(
+        //bu artı butonuna bastıgımda top margin 0.14 olsun yakalssin
+        gorevekle: () {
+          setState(() {
+            gorevyazMargin = 0.14;
+            opacity = 0.35;
+          });
+        },
+        sayfaGecis: () {
+          //projelere gecis
+          setState(() {
+            gorunur = true;
+            //MaterialPageRoute<void>(builder: (context) => Projeler());
+          });
+        },
+        aktif1: gorunur ? false : true,
+        aktif2: gorunur ? true : false,
+      ),
+    );
+  }
+
+  Visibility buildVisibilityWorkAvaible(BuildContext context) {
+    return Visibility(
+      visible: listesi.isNotEmpty,
+      child: gorevVar(context, list: gorevler),
+      replacement: gorevYok(context),
+    );
+  }
 
 //gorevyokken gorunum
-Widget gorevYok(BuildContext context) {
-  return Stack(
-    children: <Widget>[
-      Container(
-        color: Color(0xFFF9FCFF),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: MediaQuery.of(context).padding.top,
-              ),
-              //dört columnn
-              //appbar
-              Appbar(),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.18),
-
-              SvgPicture.string(
-                _svg_z5akyg,
-                allowDrawingOutsideViewBox: true,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-
-              const Text(
-                "Görev Yok",
-                style: TextStyle(
-                    fontFamily: 'Rubik-Medium',
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF554E8F),
-                    fontSize: 27),
-              ),
-              //ekran boş simgesi
-              SizedBox(height: MediaQuery.of(context).size.height * 0.013),
-
-              Text(
-                "Yapılacak görev kalmadı.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Color(0xFF82A0B7),
-                  fontFamily: 'Rubik-Regular',
+  Widget gorevYok(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          color: Color(0xFFF9FCFF),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).padding.top,
                 ),
-              ),
+                //dört columnn
+                //appbar
+                Appbar(),
 
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
-              ),
-              //gorev yok yapilacak gorev kalmadı yazısı
-              //ekle butonu ve alttaki giriş projeler kısmı
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+
+                SvgPicture.string(
+                  _svg_z5akyg,
+                  allowDrawingOutsideViewBox: true,
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+
+                const Text(
+                  "Görev Yok",
+                  style: TextStyle(
+                      fontFamily: 'Rubik-Medium', fontWeight: FontWeight.bold, color: Color(0xFF554E8F), fontSize: 27),
+                ),
+                //ekran boş simgesi
+                SizedBox(height: MediaQuery.of(context).size.height * 0.013),
+
+                Text(
+                  "Yapılacak görev kalmadı.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Color(0xFF82A0B7),
+                    fontFamily: 'Rubik-Regular',
+                  ),
+                ),
+
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                ),
+                //gorev yok yapilacak gorev kalmadı yazısı
+                //ekle butonu ve alttaki giriş projeler kısmı
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
 //gorevvarken gorunum
-Widget gorevVar(BuildContext context, {List<Gorev> list}) {
-  return SingleChildScrollView(
-    child: Column(
-      children: [
-        // AppBarTwo(gorevsayisi: .length, : ),
-        Column(
-          children: <Widget>[
-            Center(child: Text("gorev var")),
-            ListTile(
-              title: Text(list[0].title),
-            ),
-            // ListView.builder(
-            //     shrinkWrap: true,
-            //     itemCount: list.length,
-            //     itemBuilder: (context, index) {
-            //       return ListTile(
-            //         title: Text(list[index].title),
-            //       );
-            //     })
-          ],
-        )
-      ],
-    ),
-  );
+  Widget gorevVar(BuildContext context, {List<Gorev> list}) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Column(
+            children: <Widget>[
+              Center(child: Text("gorev var")),
+              ListTile(title: Text(workTitle(list))),
+              // ListView.builder(
+              //     shrinkWrap: true,
+              //     itemCount: list.length,
+              //     itemBuilder: (context, index) {
+              //       return ListTile(
+              //         title: Text(list[index].title),
+              //       );
+              //     })
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  String workTitle(List<Gorev> list) => list.isNotEmpty ? list.first.title : "Name Not Found";
 }
 
 const String _svg_yqb6y3 =
