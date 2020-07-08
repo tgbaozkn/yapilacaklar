@@ -15,37 +15,40 @@ class YeniGorev extends StatefulWidget {
 
 //burası yandaki sayfa yeni görev ekle sayfası
 class _YeniGorevState extends State<YeniGorev> {
-  String not;
-  List<Gorev> gorevler;
-  var formKey = GlobalKey<FormState>();
-  //TextEditingController controller = TextEditingController();
+  static TextEditingController controller = TextEditingController();
+  String not = controller.text;
   DateTime selectedDate = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
-  void _submitData() {
-    if (not == null) {
+  @override
+  void initState() {
+    print('initState()');
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(YeniGorev oldWidget) {
+    print('didUpdateWidget()');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _toplamData() {
+    if (controller.text.isEmpty) {
       return;
     }
-    final enteredName = not;
-
-    if (enteredName.isEmpty || selectedDate == null) {
+    final girilenGorev = not;
+    if (girilenGorev.isEmpty || selectedDate == null) {
       return;
     }
-
     widget.gorevEkle(
-      enteredName,
+      girilenGorev,
       selectedDate,
     );
-    final Gorev gorev =
-        Gorev(title: enteredName, date: selectedDate.toString());
-    gorevler.add(gorev);
-    print('eklendi');
-
-    // CloseBox functionu yazılması gerekiyor..
+    print("object");
+    Navigator.of(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    //initializeDateFormatting('tr', null);
     final double boy = MediaQuery.of(context).size.height;
     final double en = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
@@ -116,15 +119,12 @@ class _YeniGorevState extends State<YeniGorev> {
                 margin: EdgeInsets.only(left: en * 0.05, top: en * 0.1),
                 width: en * 0.88,
                 child: TextField(
-                  key: formKey,
                   style: TextStyle(
                     color: Color(0xff373737),
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  onSubmitted: (value) {
-                    _submitData();
-                  },
+                  onSubmitted: (_) => _toplamData(),
                   onChanged: (value) => not = value,
                   textCapitalization: TextCapitalization.sentences,
                 ),
@@ -181,12 +181,16 @@ class _YeniGorevState extends State<YeniGorev> {
               ),
               SizedBox(height: boy * 0.098),
               olustur(context, () {
-                //kaydetme
-                _submitData();
-                // selectedDate.hour;
-                // selectedDate.minute;
-                // print("$selectedDate.hour : $selectedDate.minute");
-              }),
+                _toplamData();
+                print("eklendi");
+                print(not);
+              }
+                  //kaydetme
+
+                  // selectedDate.hour;
+                  // selectedDate.minute;
+                  // print("$selectedDate.hour : $selectedDate.minute");
+                  ),
             ],
           ),
         ],

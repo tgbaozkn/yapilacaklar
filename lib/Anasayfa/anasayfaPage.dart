@@ -15,35 +15,47 @@ class Yapilacaklar extends StatefulWidget {
 class _YapilacaklarState extends State<Yapilacaklar> {
   double gorevyazMargin =
       1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
-  double opacity = 0;
-  bool gorunur = false;
-  List<Gorev> gorevler;
-  List<Widget> listesi = [for (var i = 0; i < 7; i++) Text("liste elemanı")];
-  void gorevEkle(String name, String date) {
-    final gorev = Gorev(title: name, date: date);
+  double opacity = 0; //bu da golge
+  int count = 0;
+  bool gorunur =
+      false; //projelere gecis bool degiskeni ,eger projelere basildiysa true olur
+  List<Gorev> _secilenGorevler = []; //gorevler listesi
+  void _gorevEkle(String gorevTitle, DateTime secilenTarih) {
+    final yenigorev = Gorev(
+      date: secilenTarih.toString(), //date secilen tarih gozukuyor
+      title: gorevTitle,
+      id: DateTime.now().toString(),
+    );
     setState(() {
-      gorevler.add(gorev);
+      count = _secilenGorevler.length;
+      for (int i = 0;
+          i <= count;
+          i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
+        _secilenGorevler.add(yenigorev); //gorevleretek tek ekle
     });
   }
 
-  /* void gorevEkle() {
-    setState(() {
-      int index = _.length;
-      //_.add('Gorev' + index.toString());
-    });
-  }*/
+  void _yeniGorevEkle(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {},
+          child: YeniGorev(
+            gorevEkle: _gorevEkle,
+          ),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Stack(
         children: <Widget>[
-          if (listesi.length > 0)
-            gorevVar(context, list: gorevler)
-          else
-            gorevYok(context),
-          //else
-          // gorevVar(widget., context),
+          _secilenGorevler.isEmpty ? gorevYok(context) : gorevVar(context),
           Container(
             margin:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
@@ -93,7 +105,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                   },
                 );
               },
-              gorevEkle: gorevEkle,
+              gorevEkle: () => _yeniGorevEkle(context),
             ),
           ),
           if (gorunur)
@@ -108,6 +120,24 @@ class _YapilacaklarState extends State<Yapilacaklar> {
         ],
       ),
     );
+  }
+}
+
+class GorevItem {
+  const GorevItem({Key key, @required this.gorev});
+  final Gorev gorev;
+  Widget build(BuildContext context) {
+    return Card(
+        elevation: 5,
+        margin: EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 5,
+        ),
+        child: ListTile(
+          title: Text(
+            gorev.title,
+          ),
+        ));
   }
 }
 
@@ -170,7 +200,14 @@ Widget gorevYok(BuildContext context) {
 }
 
 //gorevvarken gorunum
-Widget gorevVar(BuildContext context, {List<Gorev> list}) {
+Widget gorevVar(BuildContext context, {List<Gorev> gorevler}) {
+  Gorev gorev;
+  gorevler
+      .map((gorev) => GorevItem(
+            key: ValueKey(gorev.id),
+            gorev: gorev,
+          ))
+      .toList();
   return SingleChildScrollView(
     child: Column(
       children: [
@@ -178,15 +215,17 @@ Widget gorevVar(BuildContext context, {List<Gorev> list}) {
         Column(
           children: <Widget>[
             Center(child: Text("gorev var")),
-            ListTile(
-              title: Text(list[0].title),
-            ),
+            Text(gorev.title),
+            // ListTile(
+            //   title:
+            //   Text(list[i]),
+            // ),
             // ListView.builder(
             //     shrinkWrap: true,
             //     itemCount: list.length,
             //     itemBuilder: (context, index) {
             //       return ListTile(
-            //         title: Text(list[index].title),
+            //         title: list[index],
             //       );
             //     })
           ],

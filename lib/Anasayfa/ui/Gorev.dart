@@ -1,9 +1,9 @@
 class Gorev {
-  int id;
+  String id;
   String title;
   String date;
   int durum;
-  Gorev({this.date, this.durum, this.title});
+  Gorev({this.id, this.date, this.durum, this.title});
   Gorev.withId({this.date, this.durum, this.id, this.title});
 
   Map<String, dynamic> toMap() {
