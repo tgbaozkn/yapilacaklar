@@ -19,11 +19,11 @@ class _YeniGorevState extends State<YeniGorev> {
   String not = controller.text;
   DateTime selectedDate = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
-  @override
-  void initState() {
-    print('initState()');
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   print('initState()');
+  //   super.initState();
+  // }
 
   @override
   void didUpdateWidget(YeniGorev oldWidget) {

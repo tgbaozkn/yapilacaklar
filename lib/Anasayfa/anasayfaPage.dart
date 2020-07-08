@@ -55,7 +55,9 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     return Material(
       child: Stack(
         children: <Widget>[
-          _secilenGorevler.isEmpty ? gorevYok(context) : gorevVar(context),
+          _secilenGorevler.isEmpty
+              ? gorevYok(context)
+              : gorevVar(context, gorevler: _secilenGorevler),
           Container(
             margin:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
@@ -73,7 +75,6 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                 //projelere gecis
                 setState(() {
                   gorunur = true;
-                  //MaterialPageRoute<void>(builder: (context) => Projeler());
                 });
               },
               aktif1: gorunur ? false : true,
@@ -201,33 +202,23 @@ Widget gorevYok(BuildContext context) {
 
 //gorevvarken gorunum
 Widget gorevVar(BuildContext context, {List<Gorev> gorevler}) {
-  Gorev gorev;
-  gorevler
-      .map((gorev) => GorevItem(
-            key: ValueKey(gorev.id),
-            gorev: gorev,
-          ))
-      .toList();
   return SingleChildScrollView(
     child: Column(
       children: [
-        // AppBarTwo(gorevsayisi: .length, : ),
+        AppBarTwo(
+          gorevsayisi: gorevler.length,
+        ),
         Column(
           children: <Widget>[
             Center(child: Text("gorev var")),
-            Text(gorev.title),
-            // ListTile(
-            //   title:
-            //   Text(list[i]),
-            // ),
-            // ListView.builder(
-            //     shrinkWrap: true,
-            //     itemCount: list.length,
-            //     itemBuilder: (context, index) {
-            //       return ListTile(
-            //         title: list[index],
-            //       );
-            //     })
+            ListView(
+              shrinkWrap: true,
+              children: gorevler.map((gorev) {
+                return Card(
+                  child: Text(gorev.title),
+                );
+              }).toList(),
+            ),
           ],
         )
       ],

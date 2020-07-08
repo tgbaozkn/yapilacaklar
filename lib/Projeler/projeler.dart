@@ -9,6 +9,7 @@ import 'ui/icons/Is.dart';
 import 'ui/icons/Bulusma.dart';
 import 'ui/icons/Ders.dart';
 import 'ui/icons/Parti.dart';
+import '../Anasayfa/ui/Gorev.dart';
 
 class Projeler extends StatefulWidget {
   @override
@@ -19,6 +20,37 @@ class _ProjelerState extends State<Projeler> {
   double gorevyazMargin = 1;
   double opacity = 0;
   bool gorunur = false;
+  List<Gorev> gorevler = [];
+  int count = 0;
+  void _gorevEkle(String gorevTitle) {
+    final yenigorev = Gorev(
+      title: gorevTitle,
+      id: DateTime.now().toString(),
+    );
+    setState(() {
+      count = gorevler.length;
+      for (int i = 0;
+          i <= count;
+          i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
+        gorevler.add(yenigorev); //gorevleretek tek ekle
+    });
+  }
+
+  void _yeniGorevEkle(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {},
+          child: YeniProje(
+            olustur: _gorevEkle,
+          ),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double boy = MediaQuery.of(context).size.height;
@@ -89,7 +121,7 @@ class _ProjelerState extends State<Projeler> {
                     ],
                   ),
                 ),
-                liste(context),
+                liste(context, sayi: 4),
                 SizedBox(
                   height: boy * 0.1,
                 )
@@ -146,7 +178,7 @@ class _ProjelerState extends State<Projeler> {
               );
             },
             olustur: () {
-              setState(() {});
+              _yeniGorevEkle(context);
             },
           ),
         ),
@@ -169,7 +201,7 @@ class _ProjelerState extends State<Projeler> {
   }
 }
 
-Widget liste(BuildContext context) {
+Widget liste(BuildContext context, {int sayi}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
@@ -177,22 +209,24 @@ Widget liste(BuildContext context) {
         Row(
           children: [
             container(context,
-                widget: Kisisel(), task: "task", text: "Kişisel"),
+                widget: Kisisel(), task: "$sayi task", text: "Kişisel"),
             container(context, widget: Is(), task: "task", text: "İş"),
           ],
         ),
         Row(
           children: [
             container(context,
-                widget: Bulusma(), task: "task", text: "Buluşma"),
+                widget: Bulusma(), task: "$sayi task", text: "Buluşma"),
             container(context,
-                widget: alisveris(), task: "task", text: "Alışveriş"),
+                widget: alisveris(), task: "$sayi task", text: "Alışveriş"),
           ],
         ),
         Row(
           children: [
-            container(context, widget: parti(), task: "task", text: "Parti"),
-            container(context, widget: ders(), task: "task", text: "Ders"),
+            container(context,
+                widget: parti(), task: "$sayi task", text: "Parti"),
+            container(context,
+                widget: ders(), task: "$sayi task", text: "Ders"),
           ],
         ),
       ],
@@ -204,58 +238,64 @@ Widget container(BuildContext context,
     {Widget widget, String text, String task}) {
   final double boy = MediaQuery.of(context).size.height;
   final double en = MediaQuery.of(context).size.width;
-  return Padding(
-    padding: EdgeInsets.fromLTRB(18, 0, 0, 24),
-    child: Stack(
-      children: [
-        Container(
-          height: boy * 0.25,
-          width: en * 0.42,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 3,
-                offset: Offset(0, 5),
-                color: Color(0xffBBBBBB).withOpacity(0.35),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: en * 0.14,
-          top: boy * 0.06,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              widget,
-              Padding(
-                padding: EdgeInsets.only(top: 6.8),
-                child: Text(
-                  text,
-                  style: TextStyle(
-                      fontSize: boy * 0.024,
-                      color: Color(0xff686868),
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Rubik-Medium'),
+  return GestureDetector(
+    key: Key(text),
+    onTap: () {
+      print(text);
+    },
+    child: Padding(
+      padding: EdgeInsets.fromLTRB(18, 0, 0, 24),
+      child: Stack(
+        children: [
+          Container(
+            height: boy * 0.25,
+            width: en * 0.42,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 3,
+                  offset: Offset(0, 5),
+                  color: Color(0xffBBBBBB).withOpacity(0.35),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: boy * 0.012),
-                child: Text(
-                  task,
-                  style: TextStyle(
-                      fontSize: boy * 0.012,
-                      color: Color(0xffA1A1A1),
-                      fontFamily: 'Rubik-Regular'),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+          Positioned(
+            left: en * 0.14,
+            top: boy * 0.06,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget,
+                Padding(
+                  padding: EdgeInsets.only(top: 6.8),
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                        fontSize: boy * 0.024,
+                        color: Color(0xff686868),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Rubik-Medium'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: boy * 0.012),
+                  child: Text(
+                    task,
+                    style: TextStyle(
+                        fontSize: boy * 0.012,
+                        color: Color(0xffA1A1A1),
+                        fontFamily: 'Rubik-Regular'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

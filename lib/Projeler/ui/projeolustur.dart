@@ -18,11 +18,23 @@ class YeniProje extends StatefulWidget {
 
 class _YeniProjeState extends State<YeniProje> {
   TextEditingController controller = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  DateFormat dateFormat = DateFormat('EEE,HH:mm');
+  void _toplamData() {
+    if (controller.text.isEmpty) {
+      return;
+    }
+    final girilenGorev = controller.text;
+    if (girilenGorev.isEmpty) {
+      return;
+    }
+    widget.olustur(
+      girilenGorev,
+    );
+    print("object");
+    Navigator.of(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    //initializeDateFormatting('tr', null);
     final double boy = MediaQuery.of(context).size.height;
     final double en = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
@@ -65,7 +77,7 @@ class _YeniProjeState extends State<YeniProje> {
             alignment: Alignment.center,
             child: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () => widget.onTap(),
+              onPressed: () => widget.onTap(), //acilan pencereyi kapat
               color: Colors.white,
             ),
           ),
@@ -94,7 +106,9 @@ class _YeniProjeState extends State<YeniProje> {
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  onSubmitted: (value) {},
+                  onSubmitted: (_) {
+                    _toplamData();
+                  },
                   controller: controller,
                   textCapitalization: TextCapitalization.sentences,
                 ),
@@ -123,6 +137,7 @@ class _YeniProjeState extends State<YeniProje> {
               Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: olustur(context, () {
+                  _toplamData();
                   setState(() {
                     print("basıldı");
                     String text = controller.text;
