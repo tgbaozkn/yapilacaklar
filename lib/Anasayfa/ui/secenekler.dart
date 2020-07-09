@@ -23,7 +23,6 @@ class _SeceneklerState extends State<Secenekler> {
                 func: () {
                   setState(() {
                     basildi = !basildi;
-                    print("aa");
                   });
                 }),
             buton(color: Color(0xff5DE61A), text: " İş", key: "İş"),
@@ -39,7 +38,10 @@ class _SeceneklerState extends State<Secenekler> {
 Widget buton({String text, Color color, String key, Function func}) {
   return GestureDetector(
     key: Key(key),
-    onTap: func,
+    onTap: () {
+      print(text);
+      func();
+    },
     child: Padding(
       padding: EdgeInsets.fromLTRB(30, 22, 0, 17),
       child: Row(

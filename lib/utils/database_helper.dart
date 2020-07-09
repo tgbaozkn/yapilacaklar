@@ -1,17 +1,36 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Anasayfa/ui/Gorev.dart';
 
 class DatabaseHelper {
+  // //veri tabanı olusturma
+  // createDatabase() async {
+  //   String databasePath = await getDatabasePath();
+  //   String dbPath = join(databasePath, 'benim.db');
+  //   var database = await openDatabase(dbPath, version: 1, onCreate: populateDb);
+  //   // veritabanı dosyasının yoluna ulaşılmasını sağlar = openDatabase();
+  //   return database;
+  // }
+
+  // //callback fonksiyonu tanimlama populateDb oluyor burada
+  // void populateDb(Database database, int version) async {
+  //   await database.execute("CREATE TABLE GorevTable("
+  //       "id INTEGER PRIMARY KEY, "
+  //       "name TEXT,"
+  //       "date TEXT ,"
+  //       "durum INTEGER"
+  //       ") ");
+  // } //ilk veri tabanı sorgusunu GorevTable olarak cagiran 4 sutunlu bir tablo |key|name|date|durum|
   static DatabaseHelper _databaseHelper; // Singleton DatabaseHelper
   static Database _database; // Singleton Database
 
   String gorevTable = 'gorev_table';
   String colId = 'id';
   String colTitle = 'title';
-  String colPriority = 'priority';
+  String colDurum = 'priority';
   String colDate = 'date';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
@@ -46,7 +65,7 @@ class DatabaseHelper {
   void _createDb(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $gorevTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
-        '$colPriority INTEGER, $colDate TEXT)');
+        '$colDurum INTEGER, $colDate TEXT)');
   }
 
   // Fetch Operation: Get all gorev objects from database
@@ -54,7 +73,7 @@ class DatabaseHelper {
     Database db = await this.database;
 
 //		var result = await db.rawQuery('SELECT * FROM $gorevTable order by $colPriority ASC');
-    var result = await db.query(gorevTable, orderBy: '$colPriority ASC');
+    var result = await db.query(gorevTable, orderBy: '$colDurum ASC');
     return result;
   }
 

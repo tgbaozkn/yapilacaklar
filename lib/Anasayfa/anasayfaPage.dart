@@ -19,19 +19,19 @@ class _YapilacaklarState extends State<Yapilacaklar> {
   int count = 0;
   bool gorunur =
       false; //projelere gecis bool degiskeni ,eger projelere basildiysa true olur
-  List<Gorev> _secilenGorevler = []; //gorevler listesi
-  void _gorevEkle(String gorevTitle, DateTime secilenTarih) {
+  List<Gorev> mevcutGorevler = []; //gorevler listesi
+  void gorevEkle(String gorevTitle, DateTime secilenTarih) {
     final yenigorev = Gorev(
       date: secilenTarih.toString(), //date secilen tarih gozukuyor
       title: gorevTitle,
       id: DateTime.now().toString(),
     );
     setState(() {
-      count = _secilenGorevler.length;
-      for (int i = 0;
-          i <= count;
-          i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
-        _secilenGorevler.add(yenigorev); //gorevleretek tek ekle
+      // count = mevcutGorevler.length;
+      // for (int i = 0;
+      //     i <= count;
+      //     i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
+      mevcutGorevler.add(yenigorev); //gorevleretek tek ekle
     });
   }
 
@@ -41,8 +41,8 @@ class _YapilacaklarState extends State<Yapilacaklar> {
       builder: (context) {
         return GestureDetector(
           onTap: () {},
-          child: YeniGorev(
-            gorevEkle: _gorevEkle,
+          child: YeniGorevModal(
+            gorevEkle: gorevEkle,
           ),
           behavior: HitTestBehavior.opaque,
         );
@@ -55,9 +55,9 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     return Material(
       child: Stack(
         children: <Widget>[
-          _secilenGorevler.isEmpty
+          mevcutGorevler.isEmpty
               ? gorevYok(context)
-              : gorevVar(context, gorevler: _secilenGorevler),
+              : gorevVar(context, gorevler: mevcutGorevler),
           Container(
             margin:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),
@@ -96,7 +96,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
             margin: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height *
                     gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
-            child: YeniGorev(
+            child: YeniGorevModal(
               //childe buna gore ayarlanır
               onTap: () {
                 setState(
@@ -214,8 +214,13 @@ Widget gorevVar(BuildContext context, {List<Gorev> gorevler}) {
             ListView(
               shrinkWrap: true,
               children: gorevler.map((gorev) {
-                return Card(
-                  child: Text(gorev.title),
+                return Container(
+                  child: Row(
+                    children: [
+                      Text(gorev.title),
+                      Text(gorev.date),
+                    ],
+                  ),
                 );
               }).toList(),
             ),

@@ -4,7 +4,6 @@ class Gorev {
   String date;
   int durum;
   Gorev({this.id, this.date, this.durum, this.title});
-  Gorev.withId({this.date, this.durum, this.id, this.title});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();

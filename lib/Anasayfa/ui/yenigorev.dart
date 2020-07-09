@@ -4,20 +4,20 @@ import '../ui/Gorev.dart';
 import '../anasayfaPage.dart';
 import 'secenekler.dart';
 
-class YeniGorev extends StatefulWidget {
+class YeniGorevModal extends StatefulWidget {
   Function onTap, gorevEkle;
 
-  YeniGorev({this.onTap, this.gorevEkle});
+  YeniGorevModal({this.onTap, this.gorevEkle});
 
   @override
-  _YeniGorevState createState() => _YeniGorevState();
+  _YeniGorevModalState createState() => _YeniGorevModalState();
 }
 
 //burası yandaki sayfa yeni görev ekle sayfası
-class _YeniGorevState extends State<YeniGorev> {
+class _YeniGorevModalState extends State<YeniGorevModal> {
   static TextEditingController controller = TextEditingController();
-  String not = controller.text;
-  DateTime selectedDate = DateTime.now();
+  String isim = "";
+  DateTime secilenTarih = DateTime.now();
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
   // @override
   // void initState() {
@@ -26,7 +26,7 @@ class _YeniGorevState extends State<YeniGorev> {
   // }
 
   @override
-  void didUpdateWidget(YeniGorev oldWidget) {
+  void didUpdateWidget(YeniGorevModal oldWidget) {
     print('didUpdateWidget()');
     super.didUpdateWidget(oldWidget);
   }
@@ -35,13 +35,13 @@ class _YeniGorevState extends State<YeniGorev> {
     if (controller.text.isEmpty) {
       return;
     }
-    final girilenGorev = not;
-    if (girilenGorev.isEmpty || selectedDate == null) {
+    final girilenGorev = isim;
+    if (girilenGorev.isEmpty || secilenTarih == null) {
       return;
     }
     widget.gorevEkle(
       girilenGorev,
-      selectedDate,
+      secilenTarih,
     );
     print("object");
     Navigator.of(context);
@@ -124,8 +124,9 @@ class _YeniGorevState extends State<YeniGorev> {
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  onSubmitted: (_) => _toplamData(),
-                  onChanged: (value) => not = value,
+                  onChanged: (value) {
+                    isim = value;
+                  },
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
@@ -141,24 +142,12 @@ class _YeniGorevState extends State<YeniGorev> {
               FlatButton(
                 //tarih ve saat seçimi
                 onPressed: () async {
-                  final selectedDate = await _selectDateTime(context);
-                  if (selectedDate == null) return;
-
-                  print(selectedDate);
-
-                  final selectedTime = await _selectTime(context);
-                  if (selectedTime == null) return;
-                  print(selectedTime);
-
-                  setState(() {
-                    this.selectedDate = DateTime(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                      selectedTime.hour,
-                      selectedTime.minute,
-                    );
-                  });
+                  secilenTarih = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now().add(Duration(seconds: 1)),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2100),
+                  );
                 },
                 child: Row(
                   //tarih seç başlığı
@@ -175,21 +164,23 @@ class _YeniGorevState extends State<YeniGorev> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, en * 0.65, 0),
                 child: Text(DateTime.now().day ==
-                        selectedDate.day // if datetime.now + 1 = selected.day
-                    ? DateFormat('Bugün,HH:mm').format(selectedDate)
-                    : DateFormat('EEE,HH:mm').format(selectedDate)),
+                        secilenTarih.day // if datetime.now + 1 = selected.day
+                    ? DateFormat('Bugün,HH:mm').format(secilenTarih)
+                    : DateTime.now().add(Duration(days: 1)).day ==
+                            secilenTarih.day
+                        ? DateFormat("Yarın, HH:mm").format(secilenTarih)
+                        : DateFormat('EEE,HH:mm').format(secilenTarih)),
               ),
               SizedBox(height: boy * 0.098),
               olustur(context, () {
                 _toplamData();
                 print("eklendi");
-                print(not);
               }
                   //kaydetme
 
-                  // selectedDate.hour;
-                  // selectedDate.minute;
-                  // print("$selectedDate.hour : $selectedDate.minute");
+                  // secilenTarih.hour;
+                  // secilenTarih.minute;
+                  // print("$secilenTarih.hour : $secilenTarih.minute");
                   ),
             ],
           ),
@@ -242,10 +233,3 @@ Future<TimeOfDay> _selectTime(BuildContext context) {
     initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
   );
 }
-
-Future<DateTime> _selectDateTime(BuildContext context) => showDatePicker(
-      context: context,
-      initialDate: DateTime.now().add(Duration(seconds: 1)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );

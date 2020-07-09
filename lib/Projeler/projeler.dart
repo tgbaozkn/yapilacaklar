@@ -16,6 +16,9 @@ class Projeler extends StatefulWidget {
   _ProjelerState createState() => _ProjelerState();
 }
 
+// hatirlatıcıyı mantıksal operatore çevir
+// eger gorevler.length varsa hatırlatıcı appbarın üzerine gelsin
+// eger degilse sade appbar olsun
 class _ProjelerState extends State<Projeler> {
   double gorevyazMargin = 1;
   double opacity = 0;
@@ -121,7 +124,7 @@ class _ProjelerState extends State<Projeler> {
                     ],
                   ),
                 ),
-                liste(context, sayi: 4),
+                liste(context, sayi: gorevler.length),
                 SizedBox(
                   height: boy * 0.1,
                 )
@@ -210,7 +213,7 @@ Widget liste(BuildContext context, {int sayi}) {
           children: [
             container(context,
                 widget: Kisisel(), task: "$sayi task", text: "Kişisel"),
-            container(context, widget: Is(), task: "task", text: "İş"),
+            container(context, widget: Is(), task: "$sayi task", text: "İş"),
           ],
         ),
         Row(

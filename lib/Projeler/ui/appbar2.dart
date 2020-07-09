@@ -107,7 +107,7 @@ class _AppBarTwoState extends State<AppBarTwo> {
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.09,
             ),
-            Hatirlatici(),
+            if (sayi.isEmpty) Container() else Hatirlatici(),
           ],
         ),
       ],
