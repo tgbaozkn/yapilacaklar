@@ -28,7 +28,7 @@ class _ProjelerState extends State<Projeler> {
   void _gorevEkle(String gorevTitle) {
     final yenigorev = Gorev(
       title: gorevTitle,
-      id: DateTime.now().toString(),
+      id: 0, // düzelecek
     );
     setState(() {
       count = gorevler.length;

@@ -1,7 +1,7 @@
 class Gorev {
-  String id;
+  int id;
   String title;
-  String date;
+  DateTime date;
   int durum;
   Gorev({this.id, this.date, this.durum, this.title});
 

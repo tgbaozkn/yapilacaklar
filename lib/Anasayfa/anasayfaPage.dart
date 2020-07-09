@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sqflite/sqflite.dart';
 import 'ui/altmenubar.dart';
 import '../Projeler/projeler.dart';
 import '../Projeler/ui/appbar2.dart';
@@ -8,6 +9,10 @@ import 'ui/yenigorev.dart';
 import 'ui/Gorev.dart';
 
 class Yapilacaklar extends StatefulWidget {
+  Database db;
+
+  Yapilacaklar([this.db]);
+
   @override
   _YapilacaklarState createState() => _YapilacaklarState();
 }
@@ -20,34 +25,27 @@ class _YapilacaklarState extends State<Yapilacaklar> {
   bool gorunur =
       false; //projelere gecis bool degiskeni ,eger projelere basildiysa true olur
   List<Gorev> mevcutGorevler = []; //gorevler listesi
-  void gorevEkle(String gorevTitle, DateTime secilenTarih) {
-    final yenigorev = Gorev(
-      date: secilenTarih.toString(), //date secilen tarih gozukuyor
-      title: gorevTitle,
-      id: DateTime.now().toString(),
-    );
-    setState(() {
-      // count = mevcutGorevler.length;
-      // for (int i = 0;
-      //     i <= count;
-      //     i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
-      mevcutGorevler.add(yenigorev); //gorevleretek tek ekle
+
+  getGorevler() async {
+    List<Map> gorevlerQuery =
+        await widget.db.rawQuery("SELECT * FROM gorevler");
+
+    gorevlerQuery.map((gorev) {
+      String name = gorev["name"];
+      int id = gorev["id"];
+
+      Gorev yeniGorev = Gorev(id: id, title: name);
+
+      setState(() {
+        mevcutGorevler.add(yeniGorev);
+      });
     });
   }
 
-  void _yeniGorevEkle(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (context) {
-        return GestureDetector(
-          onTap: () {},
-          child: YeniGorevModal(
-            gorevEkle: gorevEkle,
-          ),
-          behavior: HitTestBehavior.opaque,
-        );
-      },
-    );
+  @override
+  void initState() {
+    getGorevler();
+    super.initState();
   }
 
   @override
@@ -98,7 +96,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                     gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
             child: YeniGorevModal(
               //childe buna gore ayarlanır
-              onTap: () {
+              closeFunc: () {
                 setState(
                   () {
                     gorevyazMargin = 1;
@@ -106,7 +104,6 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                   },
                 );
               },
-              gorevEkle: () => _yeniGorevEkle(context),
             ),
           ),
           if (gorunur)
@@ -208,24 +205,21 @@ Widget gorevVar(BuildContext context, {List<Gorev> gorevler}) {
         AppBarTwo(
           gorevsayisi: gorevler.length,
         ),
-        Column(
-          children: <Widget>[
-            Center(child: Text("gorev var")),
-            ListView(
-              shrinkWrap: true,
-              children: gorevler.map((gorev) {
-                return Container(
-                  child: Row(
-                    children: [
-                      Text(gorev.title),
-                      Text(gorev.date),
-                    ],
+        ListView(
+          shrinkWrap: true,
+          children: gorevler.map((gorev) {
+            return Container(
+              child: Row(
+                children: [
+                  Text(gorev.title),
+                  Text(
+                    gorev.date == null ? "" : gorev.date.toString(),
                   ),
-                );
-              }).toList(),
-            ),
-          ],
-        )
+                ],
+              ),
+            );
+          }).toList(),
+        ),
       ],
     ),
   );

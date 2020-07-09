@@ -5,9 +5,9 @@ import '../anasayfaPage.dart';
 import 'secenekler.dart';
 
 class YeniGorevModal extends StatefulWidget {
-  Function onTap, gorevEkle;
+  Function closeFunc;
 
-  YeniGorevModal({this.onTap, this.gorevEkle});
+  YeniGorevModal({this.closeFunc});
 
   @override
   _YeniGorevModalState createState() => _YeniGorevModalState();
@@ -15,36 +15,16 @@ class YeniGorevModal extends StatefulWidget {
 
 //burası yandaki sayfa yeni görev ekle sayfası
 class _YeniGorevModalState extends State<YeniGorevModal> {
-  static TextEditingController controller = TextEditingController();
   String isim = "";
   DateTime secilenTarih = DateTime.now();
+
   DateFormat dateFormat = DateFormat('EEE,HH:mm');
-  // @override
-  // void initState() {
-  //   print('initState()');
-  //   super.initState();
-  // }
 
-  @override
-  void didUpdateWidget(YeniGorevModal oldWidget) {
-    print('didUpdateWidget()');
-    super.didUpdateWidget(oldWidget);
-  }
+  void submitForm() {
+    print(isim);
+    print(secilenTarih);
 
-  void _toplamData() {
-    if (controller.text.isEmpty) {
-      return;
-    }
-    final girilenGorev = isim;
-    if (girilenGorev.isEmpty || secilenTarih == null) {
-      return;
-    }
-    widget.gorevEkle(
-      girilenGorev,
-      secilenTarih,
-    );
-    print("object");
-    Navigator.of(context);
+
   }
 
   @override
@@ -94,7 +74,7 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
             height: boy * 0.05,
             child: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () => widget.onTap(),
+              onPressed: () => widget.closeFunc(),
               color: Colors.white,
             ),
           ),
@@ -172,16 +152,7 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
                         : DateFormat('EEE,HH:mm').format(secilenTarih)),
               ),
               SizedBox(height: boy * 0.098),
-              olustur(context, () {
-                _toplamData();
-                print("eklendi");
-              }
-                  //kaydetme
-
-                  // secilenTarih.hour;
-                  // secilenTarih.minute;
-                  // print("$secilenTarih.hour : $secilenTarih.minute");
-                  ),
+              olustur(context: context, onTap: submitForm),
             ],
           ),
         ],
@@ -190,11 +161,9 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
   }
 }
 
-Widget olustur(BuildContext context, Function func) {
+Widget olustur({BuildContext context, Function onTap}) {
   return GestureDetector(
-    onTap: () {
-      func();
-    },
+    onTap: onTap,
     child: Container(
       child: Center(
           child: Text(
