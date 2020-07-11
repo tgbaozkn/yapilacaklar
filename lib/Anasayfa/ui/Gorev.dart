@@ -3,6 +3,7 @@ class Gorev {
   String title;
   DateTime date;
   int durum;
+  static const String TABLENAME = "gorevler";
   Gorev({this.id, this.date, this.durum, this.title});
 
   Map<String, dynamic> toMap() {

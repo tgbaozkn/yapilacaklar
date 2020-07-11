@@ -78,8 +78,8 @@ class _AltMenuBarState extends State<AltMenuBar> {
               //projeler
               Padding(
                 padding: EdgeInsets.only(
-                  left: boy * 0.08,
-                  right: boy * 0.02,
+                  left: en > 400 ? boy * 0.08 : boy * 0.065,
+                  right: boy * 0.01,
                 ),
                 child: Column(
                   children: [

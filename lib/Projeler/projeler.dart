@@ -31,11 +31,7 @@ class _ProjelerState extends State<Projeler> {
       id: 0, // düzelecek
     );
     setState(() {
-      count = gorevler.length;
-      for (int i = 0;
-          i <= count;
-          i++) //i 0 dan baslasin ve ne kadar gorev eklenirse onları eklesin
-        gorevler.add(yenigorev); //gorevleretek tek ekle
+      gorevler.add(yenigorev); //gorevleretek tek ekle
     });
   }
 

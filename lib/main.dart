@@ -8,6 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,24 +32,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future veritabaniAc() async {
     db = await openDatabase(
+      //verştabanı acildi yaratıldı
       "veritabani.db",
-      version: 1,
+      version: 2, //version da guncellemeler icin gerekli
       onCreate: (Database db, int version) {
-        db.execute("CREATE TABLE gorevler (id INTEGER PRIMARY KEY, name TEXT)");
+        db.execute(
+            "CREATE TABLE gorevler (id INTEGER PRIMARY KEY, title TEXT)"); //gorevler adında tablo olustur
         print("sıfırdan oluşturuldu");
       },
       onOpen: (Database db) {
+        //onceden olusturulmussa onu ac
         print("mevcut veritabanı açıldı");
       },
     );
 
-    setState(() {});
+    setState(() {}); //ctrl s komutunda databse in olusmasını saglıyo
   }
 
   @override
   void initState() {
     veritabaniAc();
-
     super.initState();
   }
 

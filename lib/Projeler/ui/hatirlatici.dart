@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../Anasayfa/ui/Gorev.dart';
 
 class Hatirlatici extends StatelessWidget {
-  //Hatirlatici({this.});
-  //List<> ;
+  Hatirlatici({this.gorevler});
+  List<Gorev> gorevler;
   @override
   Widget build(BuildContext context) {
     double en = MediaQuery.of(context).size.width;
@@ -69,8 +69,8 @@ class Hatirlatici extends StatelessWidget {
         Transform.translate(
           offset: Offset(16.0, 49.0),
           child: Text(
-            "Müşteri İle Buluşma",
-            //[0].title,
+            // "Müşteri İle Buluşma",
+            gorevler[3].title,
             style: TextStyle(
               fontFamily: 'Open Sans',
               fontSize: 11,

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sqflite/sqflite.dart';
 import 'ui/altmenubar.dart';
 import '../Projeler/projeler.dart';
 import '../Projeler/ui/appbar2.dart';
 import 'ui/appbar.dart';
 import 'ui/yenigorev.dart';
 import 'ui/Gorev.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Yapilacaklar extends StatefulWidget {
   Database db;
 
   Yapilacaklar([this.db]);
-
   @override
   _YapilacaklarState createState() => _YapilacaklarState();
 }
@@ -27,30 +26,42 @@ class _YapilacaklarState extends State<Yapilacaklar> {
   List<Gorev> mevcutGorevler = []; //gorevler listesi
 
   getGorevler() async {
-    List<Map> gorevlerQuery =
-        await widget.db.rawQuery("SELECT * FROM gorevler");
+    mevcutGorevler = [];
+    //gorevleri oku
+    List<Map> gorevlerQuery = //gorevleri sorgula
+        await widget.db.rawQuery(//otomatik key ataması in sql
+            //delete ve update
+            "SELECT * FROM gorevler"); //db tabanından sorgula gorevler uzerinden
 
-    gorevlerQuery.map((gorev) {
-      String name = gorev["name"];
-      int id = gorev["id"];
+    for (var i in gorevlerQuery) {
+      String name = i["name"];
+      int id = i["id"];
 
       Gorev yeniGorev = Gorev(id: id, title: name);
 
       setState(() {
-        mevcutGorevler.add(yeniGorev);
+        print("eklendi");
+        mevcutGorevler.add(yeniGorev); //gorevlere yenisini ekle .
       });
-    });
+    }
+  }
+
+  Future kaydet(Gorev gorev) async {
+    String title = gorev.title;
+    widget.db.rawInsert("INSERT INTO Gorev(id, title) VALUES(0, $title)");
   }
 
   @override
   void initState() {
     getGorevler();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Color(0xffF9FCFF),
       child: Stack(
         children: <Widget>[
           mevcutGorevler.isEmpty
@@ -95,6 +106,9 @@ class _YapilacaklarState extends State<Yapilacaklar> {
                 top: MediaQuery.of(context).size.height *
                     gorevyazMargin), //burada childin top marginini setstate de verilen degere gore ayarla
             child: YeniGorevModal(
+              getGorevler: getGorevler,
+              db: widget.db,
+              // db: widget.db, //database e kaydetmek icin buradan cektigi database üzerine kaydedecek
               //childe buna gore ayarlanır
               closeFunc: () {
                 setState(
@@ -118,24 +132,6 @@ class _YapilacaklarState extends State<Yapilacaklar> {
         ],
       ),
     );
-  }
-}
-
-class GorevItem {
-  const GorevItem({Key key, @required this.gorev});
-  final Gorev gorev;
-  Widget build(BuildContext context) {
-    return Card(
-        elevation: 5,
-        margin: EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: 5,
-        ),
-        child: ListTile(
-          title: Text(
-            gorev.title,
-          ),
-        ));
   }
 }
 
@@ -199,26 +195,56 @@ Widget gorevYok(BuildContext context) {
 
 //gorevvarken gorunum
 Widget gorevVar(BuildContext context, {List<Gorev> gorevler}) {
-  return SingleChildScrollView(
+  double en = MediaQuery.of(context).size.width;
+  double boy = MediaQuery.of(context).size.height;
+  return Container(
     child: Column(
       children: [
         AppBarTwo(
           gorevsayisi: gorevler.length,
+          gorevler: gorevler,
         ),
-        ListView(
-          shrinkWrap: true,
-          children: gorevler.map((gorev) {
-            return Container(
-              child: Row(
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            children: gorevler.map((gorev) {
+              return Column(
                 children: [
-                  Text(gorev.title),
-                  Text(
-                    gorev.date == null ? "" : gorev.date.toString(),
-                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color(0xff000000).withOpacity(0.05),
+                                offset: Offset(0, 4),
+                                blurRadius: 9)
+                          ]),
+                      margin: EdgeInsets.all(8),
+                      width: en * 0.9,
+                      height: boy * 0.08,
+                      child: Row(children: [
+                        IconButton(
+                            color: Color(0xff91DC5A),
+                            icon: Icon(Icons.check_circle),
+                            onPressed: () {}),
+                        Text(
+                          gorev.date == null ? "" : gorev.date.toString(),
+                        ),
+                        Text(gorev.title),
+                        SizedBox(width: 30),
+                        SvgPicture.string(
+                          _svg_yqb6y4,
+                          allowDrawingOutsideViewBox: true,
+                        ),
+                      ])),
+                  SizedBox(
+                    height: boy * 0.01,
+                  )
                 ],
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       ],
     ),

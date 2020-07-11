@@ -3,11 +3,13 @@ import 'package:intl/intl.dart';
 import '../ui/Gorev.dart';
 import '../anasayfaPage.dart';
 import 'secenekler.dart';
+import 'package:sqflite/sqflite.dart';
 
 class YeniGorevModal extends StatefulWidget {
-  Function closeFunc;
-
-  YeniGorevModal({this.closeFunc});
+  Function closeFunc, saveFunc; //kapatma fonksiyonu
+  Database db; //database e kaydetmek icin
+  Function getGorevler;
+  YeniGorevModal({this.closeFunc, this.db, this.saveFunc, this.getGorevler});
 
   @override
   _YeniGorevModalState createState() => _YeniGorevModalState();
@@ -23,8 +25,6 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
   void submitForm() {
     print(isim);
     print(secilenTarih);
-
-
   }
 
   @override
@@ -152,7 +152,15 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
                         : DateFormat('EEE,HH:mm').format(secilenTarih)),
               ),
               SizedBox(height: boy * 0.098),
-              olustur(context: context, onTap: submitForm),
+              olustur(
+                  context: context,
+                  onTap: () {
+                    widget.db.rawInsert(
+                        "INSERT INTO gorevler(name) VALUES('$isim');");
+
+                    widget.getGorevler();
+                    widget.closeFunc();
+                  }),
             ],
           ),
         ],
