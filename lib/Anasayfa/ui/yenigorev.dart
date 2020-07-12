@@ -156,10 +156,10 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
                   context: context,
                   onTap: () {
                     widget.db.rawInsert(
-                        "INSERT INTO gorevler(name) VALUES('$isim');");
-
-                    widget.getGorevler();
-                    widget.closeFunc();
+                        "INSERT INTO gorevler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
+                    widget.getGorevler(); //girilen gorevin buradan okunması
+                    widget
+                        .closeFunc(); //gorev girildikten sonra kapanıyor yenigorevekle modalı
                   }),
             ],
           ),

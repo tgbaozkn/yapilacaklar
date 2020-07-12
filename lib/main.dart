@@ -34,10 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
     db = await openDatabase(
       //verştabanı acildi yaratıldı
       "veritabani.db",
-      version: 2, //version da guncellemeler icin gerekli
+      version: 5, //version da guncellemeler icin gerekli
       onCreate: (Database db, int version) {
         db.execute(
-            "CREATE TABLE gorevler (id INTEGER PRIMARY KEY, title TEXT)"); //gorevler adında tablo olustur
+            "CREATE TABLE gorevler (id INTEGER PRIMARY KEY, name TEXT)"); //gorevler adında tablo olustur
         print("sıfırdan oluşturuldu");
       },
       onOpen: (Database db) {
@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     veritabaniAc();
+
     super.initState();
   }
 

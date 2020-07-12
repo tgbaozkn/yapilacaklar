@@ -69,8 +69,8 @@ class Hatirlatici extends StatelessWidget {
         Transform.translate(
           offset: Offset(16.0, 49.0),
           child: Text(
-            // "Müşteri İle Buluşma",
-            gorevler[3].title,
+            //"Müşteri İle Buluşma",
+            gorevler.length == 0 ? "Gorev Yok " : gorevler[0].title,
             style: TextStyle(
               fontFamily: 'Open Sans',
               fontSize: 11,

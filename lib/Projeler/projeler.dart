@@ -10,8 +10,12 @@ import 'ui/icons/Bulusma.dart';
 import 'ui/icons/Ders.dart';
 import 'ui/icons/Parti.dart';
 import '../Anasayfa/ui/Gorev.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Projeler extends StatefulWidget {
+  List<Gorev> gorevler = [];
+  Projeler({this.db, this.gorevler});
+  Database db;
   @override
   _ProjelerState createState() => _ProjelerState();
 }
@@ -23,32 +27,8 @@ class _ProjelerState extends State<Projeler> {
   double gorevyazMargin = 1;
   double opacity = 0;
   bool gorunur = false;
-  List<Gorev> gorevler = [];
-  int count = 0;
-  void _gorevEkle(String gorevTitle) {
-    final yenigorev = Gorev(
-      title: gorevTitle,
-      id: 0, // düzelecek
-    );
-    setState(() {
-      gorevler.add(yenigorev); //gorevleretek tek ekle
-    });
-  }
 
-  void _yeniGorevEkle(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (context) {
-        return GestureDetector(
-          onTap: () {},
-          child: YeniProje(
-            olustur: _gorevEkle,
-          ),
-          behavior: HitTestBehavior.opaque,
-        );
-      },
-    );
-  }
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +42,11 @@ class _ProjelerState extends State<Projeler> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                AppBarTwo(),
+                AppBarTwo(
+                  gorevler: widget.gorevler,
+                  gorevsayisi:
+                      widget.gorevler == null ? 0 : widget.gorevler.length,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -120,7 +104,7 @@ class _ProjelerState extends State<Projeler> {
                     ],
                   ),
                 ),
-                liste(context, sayi: gorevler.length),
+                liste(context, sayi: widget.gorevler.length),
                 SizedBox(
                   height: boy * 0.1,
                 )
@@ -176,9 +160,7 @@ class _ProjelerState extends State<Projeler> {
                 },
               );
             },
-            olustur: () {
-              _yeniGorevEkle(context);
-            },
+            olustur: () {},
           ),
         ),
         if (gorunur)
@@ -186,13 +168,16 @@ class _ProjelerState extends State<Projeler> {
             height: double.infinity,
             width: double.infinity,
             duration: Duration(milliseconds: 400),
-            child: Projeler(),
+            child: Projeler(
+              gorevler: widget.gorevler,
+            ),
           )
         else
           Container(),
         if (gorunur)
           AnimatedContainer(
-              duration: Duration(milliseconds: 400), child: Yapilacaklar())
+              duration: Duration(milliseconds: 400),
+              child: Yapilacaklar(widget.db))
         else
           Container(),
       ],

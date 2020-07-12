@@ -9,9 +9,9 @@ class Secenekler extends StatefulWidget {
 void isSelected() {}
 
 class _SeceneklerState extends State<Secenekler> {
+  bool basildi = false;
   @override
   Widget build(BuildContext context) {
-    bool basildi = false;
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -25,10 +25,41 @@ class _SeceneklerState extends State<Secenekler> {
                     basildi = !basildi;
                   });
                 }),
-            buton(color: Color(0xff5DE61A), text: " İş", key: "İş"),
-            buton(color: Color(0xffD10263), text: " Buluşma", key: "Buluşma"),
-            buton(color: Color(0xff3044F2), text: " Ders", key: "Ders"),
-            buton(text: " Alışveriş", color: Color(0xffF29130))
+            buton(
+                color: Color(0xff5DE61A),
+                text: " İş",
+                key: "İş",
+                func: () {
+                  setState(() {
+                    basildi = !basildi;
+                  });
+                }),
+            buton(
+                color: Color(0xffD10263),
+                text: " Buluşma",
+                key: "Buluşma",
+                func: () {
+                  setState(() {
+                    basildi = !basildi;
+                  });
+                }),
+            buton(
+                color: Color(0xff3044F2),
+                text: " Ders",
+                key: "Ders",
+                func: () {
+                  setState(() {
+                    basildi = !basildi;
+                  });
+                }),
+            buton(
+                text: " Alışveriş",
+                color: Color(0xffF29130),
+                func: () {
+                  setState(() {
+                    basildi = !basildi;
+                  });
+                })
           ],
         ));
   }
