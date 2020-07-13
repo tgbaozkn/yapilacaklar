@@ -152,6 +152,7 @@ class _ProjelerState extends State<Projeler> {
           margin: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * gorevyazMargin),
           child: YeniProje(
+            db: widget.db,
             onTap: () {
               setState(
                 () {
@@ -202,7 +203,7 @@ Widget liste(BuildContext context, {int sayi}) {
             container(context,
                 widget: Bulusma(), task: "$sayi task", text: "Buluşma"),
             container(context,
-                widget: alisveris(), task: "$sayi task", text: "Alışveriş"),
+                widget: Alisveris(), task: "$sayi task", text: "Alışveriş"),
           ],
         ),
         Row(

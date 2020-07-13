@@ -21,7 +21,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
   double gorevyazMargin =
       1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
   double opacity = 0; //bu da golge
-  int count = 0;
+  int id;
   bool gorunur =
       false; //projelere gecis bool degiskeni ,eger projelere basildiysa true olur
   List<Gorev> mevcutGorevler = []; //gorevler listesi
@@ -38,7 +38,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     for (var i in gorevlerQuery) {
       //indexleme
       String name = i["name"]; //0 indexten ne kadar girildiyse göster
-      int id = i["id"];
+      id = i["id"];
 
       Gorev yeniGorev = Gorev(id: id, title: name); //gosterilecek sınıflandırma
 
@@ -78,7 +78,8 @@ class _YapilacaklarState extends State<Yapilacaklar> {
               : GorevVar(
                   gorevler: mevcutGorevler,
                   db: widget.db,
-                  getGorevler: getGorevler),
+                  getGorevler: getGorevler,
+                  id: id),
           Container(
             margin:
                 EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.88),

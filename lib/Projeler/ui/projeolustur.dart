@@ -6,32 +6,20 @@ import 'icons/Ders.dart';
 import 'icons/Kisisel.dart';
 import 'icons/Is.dart';
 import 'icons/Bulusma.dart';
+import 'package:sqflite/sqflite.dart';
 
 class YeniProje extends StatefulWidget {
   Function onTap;
   Function olustur;
-  YeniProje({this.onTap, this.olustur});
+  Database db;
+  YeniProje({this.onTap, this.olustur, this.db});
 
   @override
   _YeniProjeState createState() => _YeniProjeState();
 }
 
 class _YeniProjeState extends State<YeniProje> {
-  TextEditingController controller = TextEditingController();
-  void _toplamData() {
-    if (controller.text.isEmpty) {
-      return;
-    }
-    final girilenGorev = controller.text;
-    if (girilenGorev.isEmpty) {
-      return;
-    }
-    widget.olustur(
-      girilenGorev,
-    );
-    print("object");
-    Navigator.of(context);
-  }
+  String isim = "";
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +94,9 @@ class _YeniProjeState extends State<YeniProje> {
                     fontSize: 20,
                     fontFamily: 'Rubik-Regular',
                   ),
-                  onSubmitted: (_) {
-                    _toplamData();
+                  onChanged: (value) {
+                    isim = value;
                   },
-                  controller: controller,
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
@@ -137,12 +124,8 @@ class _YeniProjeState extends State<YeniProje> {
               Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: olustur(context, () {
-                  _toplamData();
-                  setState(() {
-                    print("basıldı");
-                    String text = controller.text;
-                    print(text);
-                  });
+                  widget.db.rawInsert(
+                      "INSERT INTO gorevler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
                 }),
               ),
             ],
@@ -193,10 +176,7 @@ Widget ikonlar(BuildContext context) {
   double en = MediaQuery.of(context).size.width;
   return Row(
     children: [
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      alisveris(),
+      Alisveris(),
       SizedBox(
         width: en * 0.0346,
       ),
@@ -216,7 +196,10 @@ Widget ikonlar(BuildContext context) {
       SizedBox(
         width: en * 0.0346,
       ),
-      ders() //iş
+      ders(), //iş
+      SizedBox(
+        width: en * 0.646,
+      ),
     ],
   );
 }

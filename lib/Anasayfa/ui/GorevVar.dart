@@ -8,7 +8,8 @@ class GorevVar extends StatefulWidget {
   List<Gorev> gorevler;
   Database db;
   Function getGorevler;
-  GorevVar({this.gorevler, this.db, this.getGorevler});
+  int id;
+  GorevVar({this.gorevler, this.db, this.getGorevler, this.id});
   @override
   _GorevVarState createState() => _GorevVarState();
 }
@@ -16,6 +17,7 @@ class GorevVar extends StatefulWidget {
 class _GorevVarState extends State<GorevVar> {
   double right = 8;
   bool can = false;
+  bool todo = false;
   @override
   Widget build(
     BuildContext context,
@@ -39,65 +41,100 @@ class _GorevVarState extends State<GorevVar> {
                   children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Row(
+                      child: Stack(
                         children: [
-                          SizedBox(width: en * 0.03),
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            Color(0xff000000).withOpacity(0.05),
-                                        offset: Offset(0, 4),
-                                        blurRadius: 9)
-                                  ]),
-                              margin: EdgeInsets.all(8),
-                              width: en * 0.9,
-                              height: boy * 0.08,
-                              child: Row(children: [
-                                IconButton(
-                                    color: Color(0xff91DC5A),
-                                    icon: Icon(Icons.check_circle),
-                                    onPressed: () {}),
-                                Text(
-                                  gorev.date == null
-                                      ? ""
-                                      : gorev.date.toString(),
+                          Row(
+                            children: [
+                              SizedBox(width: en * 0.03),
+                              Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xff000000)
+                                                .withOpacity(0.05),
+                                            offset: Offset(0, 4),
+                                            blurRadius: 9)
+                                      ]),
+                                  margin: EdgeInsets.all(8),
+                                  width: en * 0.9,
+                                  height: boy * 0.08,
+                                  child: Row(children: [
+                                    if (todo)
+                                      IconButton(
+                                          color: Color(0xff91DC5A),
+                                          icon: Icon(Icons.check_circle),
+                                          onPressed: () {
+                                            setState(() {
+                                              todo = !todo;
+                                            });
+                                          })
+                                    else
+                                      IconButton(
+                                          icon: Icon(Icons.gps_not_fixed),
+                                          color: Color(0xffD9D9D9),
+                                          onPressed: () {
+                                            setState(() {
+                                              todo = !todo;
+                                            });
+                                          }),
+                                    Text(
+                                      gorev.date == null
+                                          ? ""
+                                          : gorev.date.toString(),
+                                    ),
+                                    Text(
+                                      gorev.title,
+                                      style: TextStyle(
+                                          decoration: todo
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: boy * 0.022,
+                                          fontFamily: 'Rubik-Medium',
+                                          fontWeight: FontWeight.bold,
+                                          color: todo
+                                              ? Color(0xffC3C1C1)
+                                              : Color(0xff554E8F)),
+                                    ),
+                                  ])),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xffFFCFCF),
+                                  borderRadius: BorderRadius.circular(35),
                                 ),
-                                Text(gorev.title),
-                                SizedBox(width: 30),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      can = !can;
-                                      print(can);
-                                    });
-                                  },
-                                  child: SvgPicture.string(
-                                    can ? _svg_yqb6y4 : _svg_yqb6y3,
-                                    allowDrawingOutsideViewBox: true,
-                                  ),
-                                ),
-                              ])),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xffFFCFCF),
-                              borderRadius: BorderRadius.circular(35),
+                                margin: EdgeInsets.fromLTRB(15, 8, 8, 8),
+                                child: IconButton(
+                                    color: Colors.red,
+                                    iconSize: 25,
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      widget.db.rawDelete(
+                                          "DELETE FROM gorevler WHERE id = ${widget.id}");
+                                      print(widget.id);
+                                      print("silindi");
+                                      widget.getGorevler();
+                                    }),
+                              )
+                            ],
+                          ),
+                          Positioned(
+                            left: en * 0.85,
+                            top: boy * 0.045,
+                            child: GestureDetector(
+                              key: Key(widget.id.toString()),
+                              onTap: () {
+                                setState(() {
+                                  can = !can;
+                                  print(can);
+                                });
+                              },
+                              child: SvgPicture.string(
+                                can ? _svg_yqb6y4 : _svg_yqb6y3,
+                                allowDrawingOutsideViewBox: true,
+                              ),
                             ),
-                            margin: EdgeInsets.fromLTRB(15, 8, 8, 8),
-                            child: IconButton(
-                                color: Colors.red,
-                                iconSize: 25,
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  widget.db.rawDelete(
-                                      "DELETE FROM gorevler WHERE name=?");
-                                  print("silindi");
-                                  widget.getGorevler();
-                                }),
-                          )
+                          ),
                         ],
                       ),
                     ),

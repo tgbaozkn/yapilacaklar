@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import '../anasayfaPage.dart';
-import 'package:yapilacaklar/Projeler/projeler.dart';
 
 class AltMenuBar extends StatefulWidget {
   Function gorevekle, sayfaGecis, git;

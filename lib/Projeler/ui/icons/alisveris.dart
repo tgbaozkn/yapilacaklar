@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class alisveris extends StatelessWidget {
-  alisveris({
-    Key key,
-  }) : super(key: key);
+class Alisveris extends StatelessWidget {
+  Function onTap;
+  Alisveris({this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5cffd09b),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5cffd09b),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(17.0, 20.0),
-          child:
-              // Adobe XD layer: 'shopping-basket' (group)
-              Stack(
-            children: <Widget>[
-              Transform.translate(
-                offset: Offset(0.0, 0.0),
-                child: SvgPicture.string(
-                  _svg_nah9sh,
-                  allowDrawingOutsideViewBox: true,
+          Transform.translate(
+            offset: Offset(17.0, 20.0),
+            child:
+                // Adobe XD layer: 'shopping-basket' (group)
+                Stack(
+              children: <Widget>[
+                Transform.translate(
+                  offset: Offset(0.0, 0.0),
+                  child: SvgPicture.string(
+                    _svg_nah9sh,
+                    allowDrawingOutsideViewBox: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
