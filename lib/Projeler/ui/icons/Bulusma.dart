@@ -2,31 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Bulusma extends StatelessWidget {
+  Function onTap;
   Bulusma({
     Key key,
-  }) : super(key: key);
+    this.onTap,
+  });
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5cff9bcd),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5cff9bcd),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(18.0, 15.0),
-          child:
-              // Adobe XD layer: 'presentation (1)' (shape)
-              SvgPicture.string(
-            _svg_28k588,
-            allowDrawingOutsideViewBox: true,
+          Transform.translate(
+            offset: Offset(18.0, 15.0),
+            child:
+                // Adobe XD layer: 'presentation (1)' (shape)
+                SvgPicture.string(
+              _svg_28k588,
+              allowDrawingOutsideViewBox: true,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

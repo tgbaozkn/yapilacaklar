@@ -6,12 +6,60 @@ import 'package:sqflite/sqflite.dart';
 
 class GorevVar extends StatefulWidget {
   List<Gorev> gorevler;
+  String kategori;
   Database db;
   Function getGorevler;
   int id;
-  GorevVar({this.gorevler, this.db, this.getGorevler, this.id});
+  GorevVar({this.gorevler, this.db, this.getGorevler, this.id, this.kategori});
   @override
   _GorevVarState createState() => _GorevVarState();
+}
+
+Color getHangiColor(String kategori) {
+  switch (kategori) {
+    case "kisisel":
+      return Color(0xffFFD506);
+      break;
+    case "work":
+      return Color(0xff5DE61A);
+      break;
+    case "meet":
+      return Color(0xffD10263);
+      break;
+    case "ders":
+      return Color(0xff3044F2);
+      break;
+    case "shopping":
+      return Color(0xffF29130);
+      break;
+    case "party":
+      return Color(0xff09ACCE);
+      break;
+    default:
+      return Colors.white;
+  }
+}
+
+Icon getHangiDurum(int durum) {
+  switch (durum) {
+    case 1:
+      return Icon(Icons.check_circle);
+      break;
+    case 2:
+      return Icon(Icons.gps_not_fixed);
+      break;
+  }
+}
+
+Color durumRengi(int durum) {
+  switch (durum) {
+    case 1:
+      return Color(0xff91DC5A);
+      break;
+    case 2:
+      return Color(0xffD9D9D9);
+      break;
+  }
 }
 
 class _GorevVarState extends State<GorevVar> {
@@ -80,12 +128,13 @@ class _GorevVarState extends State<GorevVar> {
                                             });
                                           }),
                                     Text(
-                                      gorev.date == null
-                                          ? ""
-                                          : gorev.date.toString(),
+                                      gorev.date == null ? "" : gorev.date,
+                                    ),
+                                    SizedBox(
+                                      width: en * 0.03,
                                     ),
                                     Text(
-                                      gorev.title,
+                                      gorev.title == null ? "" : gorev.title,
                                       style: TextStyle(
                                           decoration: todo
                                               ? TextDecoration.lineThrough
@@ -135,6 +184,15 @@ class _GorevVarState extends State<GorevVar> {
                               ),
                             ),
                           ),
+                          Positioned(
+                            top: boy * 0.013,
+                            left: en * 0.035,
+                            child: Container(
+                              color: getHangiColor(widget.kategori),
+                              height: boy * 0.08,
+                              width: en * 0.02,
+                            ),
+                          )
                         ],
                       ),
                     ),

@@ -119,13 +119,14 @@ class _YeniProjeState extends State<YeniProje> {
                   ],
                 ),
               ),
-              //Text(Jiffy(selectedDate).format('EEE,HH:dd')) //Mon,18:22,
               SizedBox(height: boy * 0.098),
               Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: olustur(context, () {
+                  widget.olustur();
+                  print(isim);
                   widget.db.rawInsert(
-                      "INSERT INTO gorevler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
+                      "INSERT INTO projeler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
                 }),
               ),
             ],
@@ -139,7 +140,6 @@ class _YeniProjeState extends State<YeniProje> {
 Widget olustur(BuildContext context, Function func) {
   return GestureDetector(
     onTap: () {
-      print("Olusturuldu");
       func();
     },
     child: Container(
@@ -192,11 +192,11 @@ Widget ikonlar(BuildContext context) {
       SizedBox(
         width: en * 0.0346,
       ),
-      parti(), //kişisel
+      Parti(), //kişisel
       SizedBox(
         width: en * 0.0346,
       ),
-      ders(), //iş
+      Ders(), //iş
       SizedBox(
         width: en * 0.646,
       ),

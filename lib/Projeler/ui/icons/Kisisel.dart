@@ -2,35 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Kisisel extends StatelessWidget {
-  Kisisel({
-    Key key,
-  }) : super(key: key);
+  Function onTap;
+  Kisisel({Key key, this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5cffee9b),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5cffee9b),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(18.28, 15.99),
-          child:
-              // Adobe XD layer: 'user' (group)
-              Stack(
-            children: <Widget>[
-              SvgPicture.string(
-                _svg_xphx42,
-                allowDrawingOutsideViewBox: true,
-              ),
-            ],
+          Transform.translate(
+            offset: Offset(18.28, 15.99),
+            child:
+                // Adobe XD layer: 'user' (group)
+                Stack(
+              children: <Widget>[
+                SvgPicture.string(
+                  _svg_xphx42,
+                  allowDrawingOutsideViewBox: true,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

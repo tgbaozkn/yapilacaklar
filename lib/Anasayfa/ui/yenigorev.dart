@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../ui/Gorev.dart';
-import '../anasayfaPage.dart';
-import 'secenekler.dart';
+import 'Secenekler_buton.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'dart:convert' show utf8;
 
 class YeniGorevModal extends StatefulWidget {
   Function closeFunc, saveFunc; //kapatma fonksiyonu
@@ -19,9 +19,9 @@ class YeniGorevModal extends StatefulWidget {
 class _YeniGorevModalState extends State<YeniGorevModal> {
   String isim = "";
   DateTime secilenTarih = DateTime.now();
+  String secilen = "";
 
-  DateFormat dateFormat = DateFormat('EEE,HH:mm');
-
+  String _time = DateFormat("HH:mm").format(DateTime.now());
   void submitForm() {
     print(isim);
     print(secilenTarih);
@@ -31,6 +31,7 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
   Widget build(BuildContext context) {
     final double boy = MediaQuery.of(context).size.height;
     final double en = MediaQuery.of(context).size.width;
+
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -110,7 +111,88 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
-              Secenekler(), //kisiel is bulusma yazan kısım gorev kriterleri
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    SeceneklerButon(
+                        basildi: secilen == "kisisel",
+                        arkaplan: Color(0xffFFD506),
+                        color: secilen == "kisisel"
+                            ? Colors.white
+                            : Color(0xffFFD506),
+                        text: " Kişisel",
+                        func: () {
+                          setState(() {
+                            secilen = "kisisel";
+                          });
+                        }),
+                    SeceneklerButon(
+                        arkaplan: Color(0xff5DE61A),
+                        basildi: secilen == "work",
+                        color: secilen == "work"
+                            ? Colors.white
+                            : Color(0xff5DE61A),
+                        text: " İş",
+                        func: () {
+                          setState(() {
+                            secilen = "work";
+                          });
+                        }),
+                    SeceneklerButon(
+                        arkaplan: Color(0xffD10263),
+                        basildi: secilen == "meet",
+                        color: secilen == "meet"
+                            ? Colors.white
+                            : Color(0xffD10263),
+                        text: " Buluşma",
+                        func: () {
+                          setState(() {
+                            secilen = "meet";
+                          });
+                        }),
+                    SeceneklerButon(
+                        arkaplan: Color(0xff3044F2),
+                        basildi: secilen == "ders",
+                        color: secilen == "ders"
+                            ? Colors.white
+                            : Color(0xff3044F2),
+                        text: " Ders",
+                        func: () {
+                          setState(() {
+                            secilen = "ders";
+                          });
+                        }),
+                    SeceneklerButon(
+                        arkaplan: Color(0xffF29130),
+                        basildi: secilen == "shopping",
+                        text: " Alışveriş",
+                        color: secilen == "shopping"
+                            ? Colors.white
+                            : Color(0xffF29130),
+                        func: () {
+                          setState(() {
+                            secilen = "shopping";
+                          });
+                        }),
+                    SeceneklerButon(
+                        basildi: secilen == "party",
+                        text: " Parti",
+                        arkaplan: Color(0xff09ACCE),
+                        color: secilen == "party"
+                            ? Colors.white
+                            : Color(0xff09ACCE),
+                        func: () {
+                          setState(() {
+                            secilen = "party";
+                          });
+                        }),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ), //kisiel is bulusma yazan kısım gorev kriterleri
               Divider(
                 //alt cizgi
                 // bu alttakş çizgi
@@ -122,12 +204,22 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
               FlatButton(
                 //tarih ve saat seçimi
                 onPressed: () async {
-                  secilenTarih = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now().add(Duration(seconds: 1)),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
+                  secilenTarih = await DatePicker.showDatePicker(
+                    context,
+                    minTime: DateTime.now().add(Duration(seconds: 1)),
+                    currentTime: DateTime.now(),
+                    maxTime: DateTime(2100),
+                    locale: LocaleType.tr,
                   );
+                  DatePicker.showTimePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true, onConfirm: (time) {
+                    _time = '${time.hour} : ${time.minute} ';
+                    setState(() {});
+                  }, currentTime: DateTime.now(), locale: LocaleType.tr);
+                  setState(() {});
                 },
                 child: Row(
                   //tarih seç başlığı
@@ -142,21 +234,25 @@ class _YeniGorevModalState extends State<YeniGorevModal> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, en * 0.65, 0),
-                child: Text(DateTime.now().day ==
-                        secilenTarih.day // if datetime.now + 1 = selected.day
-                    ? DateFormat('Bugün,HH:mm').format(secilenTarih)
-                    : DateTime.now().add(Duration(days: 1)).day ==
-                            secilenTarih.day
-                        ? DateFormat("Yarın, HH:mm").format(secilenTarih)
-                        : DateFormat('EEE,HH:mm').format(secilenTarih)),
+                padding: EdgeInsets.fromLTRB(en * 0.1, 0, en * 0.65, 0),
+                child: Row(
+                  children: [
+                    Text(DateTime.now().day == secilenTarih.day
+                        ? DateFormat('Bugün,').format(secilenTarih)
+                        : DateTime.now().add(Duration(days: 1)).day ==
+                                secilenTarih.day
+                            ? DateFormat("Yarın,").format(secilenTarih)
+                            : DateFormat('EEE,').format(secilenTarih)),
+                    Text("$_time"),
+                  ],
+                ),
               ),
               SizedBox(height: boy * 0.098),
               olustur(
                   context: context,
                   onTap: () {
                     widget.db.rawInsert(
-                        "INSERT INTO gorevler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
+                        "INSERT INTO gorevler(name,date,kategori) VALUES('$isim','$_time','$secilen');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
                     widget.getGorevler(); //girilen gorevin buradan okunması
                     widget
                         .closeFunc(); //gorev girildikten sonra kapanıyor yenigorevekle modalı
@@ -199,14 +295,5 @@ Widget olustur({BuildContext context, Function onTap}) {
         ],
       ),
     ),
-  );
-}
-
-Future<TimeOfDay> _selectTime(BuildContext context) {
-  final now = TimeOfDay.now();
-
-  return showTimePicker(
-    context: context,
-    initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
   );
 }

@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class parti extends StatelessWidget {
-  parti({
-    Key key,
-  }) : super(key: key);
+class Parti extends StatelessWidget {
+  Function onTap;
+  Parti({Key key, this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5c9bfff8),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5c9bfff8),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(18.0, 18.0),
-          child:
-              // Adobe XD layer: 'confetti' (group)
-              Stack(
-            children: <Widget>[
-              Transform.translate(
-                offset: Offset(0.0, 0.0),
-                child: SvgPicture.string(
-                  _svg_7bz4e,
-                  allowDrawingOutsideViewBox: true,
+          Transform.translate(
+            offset: Offset(18.0, 18.0),
+            child:
+                // Adobe XD layer: 'confetti' (group)
+                Stack(
+              children: <Widget>[
+                Transform.translate(
+                  offset: Offset(0.0, 0.0),
+                  child: SvgPicture.string(
+                    _svg_7bz4e,
+                    allowDrawingOutsideViewBox: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

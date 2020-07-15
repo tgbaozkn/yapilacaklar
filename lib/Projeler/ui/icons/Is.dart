@@ -2,38 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Is extends StatelessWidget {
-  Is({
-    Key key,
-  }) : super(key: key);
+  Function onTap;
+  Is({Key key, this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5cb5ff9b),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5cb5ff9b),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(18.0, 19.5),
-          child:
-              // Adobe XD layer: 'briefcase' (group)
-              Stack(
-            children: <Widget>[
-              Transform.translate(
-                offset: Offset(0.0, 0.5),
-                child: SvgPicture.string(
-                  _svg_45c96q,
-                  allowDrawingOutsideViewBox: true,
+          Transform.translate(
+            offset: Offset(18.0, 19.5),
+            child:
+                // Adobe XD layer: 'briefcase' (group)
+                Stack(
+              children: <Widget>[
+                Transform.translate(
+                  offset: Offset(0.0, 0.5),
+                  child: SvgPicture.string(
+                    _svg_45c96q,
+                    allowDrawingOutsideViewBox: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

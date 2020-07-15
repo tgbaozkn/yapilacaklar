@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ders extends StatelessWidget {
-  ders({
-    Key key,
-  }) : super(key: key);
+class Ders extends StatelessWidget {
+  Function onTap;
+  Ders({this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: 65.1,
-          height: 65.1,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
-            color: const Color(0x5cf59bff),
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 65.1,
+            height: 65.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.elliptical(32.56, 32.56)),
+              color: const Color(0x5cf59bff),
+            ),
           ),
-        ),
-        Transform.translate(
-          offset: Offset(19.0, 19.0),
-          child:
-              // Adobe XD layer: 'molecule' (group)
-              Stack(
-            children: <Widget>[
-              SvgPicture.string(
-                _svg_l5ahei,
-                allowDrawingOutsideViewBox: true,
-              ),
-            ],
+          Transform.translate(
+            offset: Offset(19.0, 19.0),
+            child:
+                // Adobe XD layer: 'molecule' (group)
+                Stack(
+              children: <Widget>[
+                SvgPicture.string(
+                  _svg_l5ahei,
+                  allowDrawingOutsideViewBox: true,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,10 +1,11 @@
 class Gorev {
   int id;
   String title;
-  DateTime date;
+  String date;
   int durum;
+  String kategori;
   static const String TABLENAME = "gorevler";
-  Gorev({this.id, this.date, this.durum, this.title});
+  Gorev({this.id, this.date, this.durum, this.title, this.kategori});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -14,6 +15,7 @@ class Gorev {
     map['title'] = title;
     map['durum'] = durum;
     map['date'] = date;
+    map['kategori'] = kategori;
 
     return map;
   }
@@ -23,5 +25,6 @@ class Gorev {
     this.title = map['title'];
     this.durum = map['durum'];
     this.date = map['date'];
+    this.kategori = map['kategori'];
   }
 }

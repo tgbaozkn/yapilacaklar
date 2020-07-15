@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'ui/altmenubar.dart';
 import '../Projeler/projeler.dart';
-import '../Projeler/ui/appbar2.dart';
 import 'ui/appbar.dart';
 import 'ui/yenigorev.dart';
 import 'ui/Gorev.dart';
@@ -22,6 +21,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
       1; //  bu alttan çıkması için animasyon degiskeni top margin ekrandan maksimum uzaklıkta basta gozukmuyor sonra ben + butonuna basınca o margin degeri top : 0.14 oluyor şu an ki hali tekrar kapat butonuna basınca top margin maksimum uzaklıkta
   double opacity = 0; //bu da golge
   int id;
+  String kategori = "yok";
   bool gorunur =
       false; //projelere gecis bool degiskeni ,eger projelere basildiysa true olur
   List<Gorev> mevcutGorevler = []; //gorevler listesi
@@ -39,8 +39,14 @@ class _YapilacaklarState extends State<Yapilacaklar> {
       //indexleme
       String name = i["name"]; //0 indexten ne kadar girildiyse göster
       id = i["id"];
+      String date = i["date"];
+      kategori = i["kategori"];
 
-      Gorev yeniGorev = Gorev(id: id, title: name); //gosterilecek sınıflandırma
+      Gorev yeniGorev = Gorev(
+          id: id,
+          title: name,
+          date: date,
+          kategori: kategori); //gosterilecek sınıflandırma
 
       setState(() {
         print("Veriler Okundu");
@@ -51,15 +57,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
     }
   }
 
-  Future kaydet(Gorev gorev) async {
-    //insert işlemi
-    String title = gorev.title; //gorevin metnini yerleştir
-    widget.db.rawInsert(
-        "INSERT INTO Gorev(id, title) VALUES(0, $title)"); //idsi 0 olan gorevin metnini yerleştir
-  }
-
-  //silme işlemi
-  //#TODO:istenilen şey gorev cıntaineri sola doğru kaydığında delete iconu çıksın ve tıkladığımda silinsin
+//#TODO: kategoriyi kaydet
 
   @override
   void initState() {
@@ -76,6 +74,7 @@ class _YapilacaklarState extends State<Yapilacaklar> {
           mevcutGorevler.isEmpty
               ? gorevYok(context)
               : GorevVar(
+                  kategori: kategori,
                   gorevler: mevcutGorevler,
                   db: widget.db,
                   getGorevler: getGorevler,
@@ -140,7 +139,6 @@ class _YapilacaklarState extends State<Yapilacaklar> {
               duration: Duration(milliseconds: 400),
               child: Projeler(
                 db: widget.db,
-                gorevler: mevcutGorevler,
               ),
             )
           else

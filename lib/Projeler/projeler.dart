@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yapilacaklar/Projeler/ui/proje_kategori.dart';
 import '../Anasayfa/ui/altmenubar.dart';
 import './ui/appbar2.dart';
 import '../Anasayfa/anasayfaPage.dart';
@@ -13,22 +14,46 @@ import '../Anasayfa/ui/Gorev.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Projeler extends StatefulWidget {
-  List<Gorev> gorevler = [];
-  Projeler({this.db, this.gorevler});
+  Projeler({
+    this.db,
+  });
   Database db;
   @override
   _ProjelerState createState() => _ProjelerState();
 }
 
-// hatirlatıcıyı mantıksal operatore çevir
-// eger gorevler.length varsa hatırlatıcı appbarın üzerine gelsin
-// eger degilse sade appbar olsun
 class _ProjelerState extends State<Projeler> {
   double gorevyazMargin = 1;
   double opacity = 0;
-  bool gorunur = false;
-
+  bool gorunur, projekategori = false;
+  List<Gorev> gorevler = [];
   int count = 0;
+  getGorevler() async {
+    gorevler = [];
+    //gorevleri oku
+    List<Map> projelerQuery = //gorevleri sorgula
+        await widget.db.rawQuery(//otomatik key ataması in sql
+            //delete ve update
+            "SELECT * FROM projeler"); //db tabanından sorgula gorevler uzerinden * tüm hepsi anlamına gelir
+    //gorevlerdeki tüm listeyi oku
+
+    for (var i in projelerQuery) {
+      //indexleme
+      String name = i["name"]; //0 indexten ne kadar girildiyse göster
+      int id = i["id"];
+      String kategori = i["kategori"];
+
+      Gorev yeniGorev = Gorev(
+          id: id, title: name, kategori: kategori); //gosterilecek sınıflandırma
+
+      setState(() {
+        print("Projeler Okundu");
+        gorevler.add(yeniGorev); //gorevlere yenisini ekle .
+
+        //print("id : $id"); //idler farkli
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +68,8 @@ class _ProjelerState extends State<Projeler> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 AppBarTwo(
-                  gorevler: widget.gorevler,
-                  gorevsayisi:
-                      widget.gorevler == null ? 0 : widget.gorevler.length,
+                  gorevler: gorevler,
+                  gorevsayisi: gorevler == null ? 0 : gorevler.length,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -104,7 +128,11 @@ class _ProjelerState extends State<Projeler> {
                     ],
                   ),
                 ),
-                liste(context, sayi: widget.gorevler.length),
+                liste(context, sayi: gorevler.length, onTap: () {
+                  setState(() {
+                    projekategori = true;
+                  });
+                }),
                 SizedBox(
                   height: boy * 0.1,
                 )
@@ -161,7 +189,7 @@ class _ProjelerState extends State<Projeler> {
                 },
               );
             },
-            olustur: () {},
+            olustur: getGorevler,
           ),
         ),
         if (gorunur)
@@ -169,9 +197,7 @@ class _ProjelerState extends State<Projeler> {
             height: double.infinity,
             width: double.infinity,
             duration: Duration(milliseconds: 400),
-            child: Projeler(
-              gorevler: widget.gorevler,
-            ),
+            child: Projeler(),
           )
         else
           Container(),
@@ -181,12 +207,23 @@ class _ProjelerState extends State<Projeler> {
               child: Yapilacaklar(widget.db))
         else
           Container(),
+        Visibility(
+          child: ProjeKategori(
+              close: () {
+                setState(() {
+                  projekategori = false;
+                });
+              },
+              text: "Kişisel" //#TODO:database den isim olarak çek,
+              ),
+          visible: projekategori,
+        )
       ],
     );
   }
 }
 
-Widget liste(BuildContext context, {int sayi}) {
+Widget liste(BuildContext context, {int sayi, Function onTap}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
@@ -194,24 +231,37 @@ Widget liste(BuildContext context, {int sayi}) {
         Row(
           children: [
             container(context,
-                widget: Kisisel(), task: "$sayi task", text: "Kişisel"),
-            container(context, widget: Is(), task: "$sayi task", text: "İş"),
+                widget: Kisisel(),
+                task: "$sayi task",
+                text: "Kişisel",
+                onTap: onTap),
+            container(context,
+                widget: Is(), task: "$sayi task", text: "İş", onTap: onTap),
           ],
         ),
         Row(
           children: [
             container(context,
-                widget: Bulusma(), task: "$sayi task", text: "Buluşma"),
+                widget: Bulusma(),
+                task: "$sayi task",
+                text: "Buluşma",
+                onTap: onTap),
             container(context,
-                widget: Alisveris(), task: "$sayi task", text: "Alışveriş"),
+                widget: Alisveris(),
+                task: "$sayi task",
+                text: "Alışveriş",
+                onTap: onTap),
           ],
         ),
         Row(
           children: [
             container(context,
-                widget: parti(), task: "$sayi task", text: "Parti"),
+                widget: Parti(),
+                task: "$sayi task",
+                text: "Parti",
+                onTap: onTap),
             container(context,
-                widget: ders(), task: "$sayi task", text: "Ders"),
+                widget: Ders(), task: "$sayi task", text: "Ders", onTap: onTap),
           ],
         ),
       ],
@@ -220,12 +270,13 @@ Widget liste(BuildContext context, {int sayi}) {
 }
 
 Widget container(BuildContext context,
-    {Widget widget, String text, String task}) {
+    {Widget widget, String text, String task, Function onTap}) {
   final double boy = MediaQuery.of(context).size.height;
   final double en = MediaQuery.of(context).size.width;
   return GestureDetector(
     key: Key(text),
     onTap: () {
+      onTap();
       print(text);
     },
     child: Padding(

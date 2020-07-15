@@ -34,15 +34,18 @@ class _MyHomePageState extends State<MyHomePage> {
     db = await openDatabase(
       //verştabanı acildi yaratıldı
       "veritabani.db",
-      version: 5, //version da guncellemeler icin gerekli
+      version: 14, //version da guncellemeler icin gerekli
       onCreate: (Database db, int version) {
         db.execute(
-            "CREATE TABLE gorevler (id INTEGER PRIMARY KEY, name TEXT)"); //gorevler adında tablo olustur
+            "CREATE TABLE gorevler (id INTEGER PRIMARY KEY, name TEXT, date TEXT,kategori TEXT)"); //gorevler adında tablo olustur
         print("sıfırdan oluşturuldu");
       },
       onOpen: (Database db) {
         //onceden olusturulmussa onu ac
         print("mevcut veritabanı açıldı");
+        db.execute(
+            "CREATE TABLE projeler(id INTEGER PRIMARY KEY,name TEXT,kategori TEXT)");
+        print("projeler sıfırdan olusturuldu");
       },
     );
 

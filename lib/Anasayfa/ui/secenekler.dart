@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:yapilacaklar/Anasayfa/ui/Secenekler_buton.dart';
 import 'Secenekler_buton.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Secenekler extends StatefulWidget {
+  Database db;
+  Secenekler({this.db});
   @override
   _SeceneklerState createState() => _SeceneklerState();
 }
 
 class _SeceneklerState extends State<Secenekler> {
-  bool kisisel = false;
-  bool work = false;
-  bool meet = false;
-  bool ders = false;
-  bool shopping = false;
-  bool party = false;
+  String secilen = "";
+  //duz kullanici gibi dusunmek.
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -21,63 +20,65 @@ class _SeceneklerState extends State<Secenekler> {
       child: Row(
         children: [
           SeceneklerButon(
-              basildi: kisisel,
+              basildi: secilen == "kisisel",
               arkaplan: Color(0xffFFD506),
-              color: kisisel ? Colors.white : Color(0xffFFD506),
+              color: secilen == "kisisel" ? Colors.white : Color(0xffFFD506),
               text: " Kişisel",
               func: () {
+                widget.db.rawInsert(
+                    "INSERT INTO gorevler(kategori) VALUES ('$secilen')");
                 setState(() {
-                  kisisel = !kisisel;
+                  secilen = "kisisel";
                 });
               }),
           SeceneklerButon(
               arkaplan: Color(0xff5DE61A),
-              basildi: work,
-              color: work ? Colors.white : Color(0xff5DE61A),
+              basildi: secilen == "work",
+              color: secilen == "work" ? Colors.white : Color(0xff5DE61A),
               text: " İş",
               func: () {
                 setState(() {
-                  work = !work;
+                  secilen = "work";
                 });
               }),
           SeceneklerButon(
               arkaplan: Color(0xffD10263),
-              basildi: meet,
-              color: meet ? Colors.white : Color(0xffD10263),
+              basildi: secilen == "meet",
+              color: secilen == "meet" ? Colors.white : Color(0xffD10263),
               text: " Buluşma",
               func: () {
                 setState(() {
-                  meet = !meet;
+                  secilen = "meet";
                 });
               }),
           SeceneklerButon(
               arkaplan: Color(0xff3044F2),
-              basildi: ders,
-              color: ders ? Colors.white : Color(0xff3044F2),
+              basildi: secilen == "ders",
+              color: secilen == "ders" ? Colors.white : Color(0xff3044F2),
               text: " Ders",
               func: () {
                 setState(() {
-                  ders = !ders;
+                  secilen = "ders";
                 });
               }),
           SeceneklerButon(
               arkaplan: Color(0xffF29130),
-              basildi: shopping,
+              basildi: secilen == "shopping",
               text: " Alışveriş",
-              color: shopping ? Colors.white : Color(0xffF29130),
+              color: secilen == "shopping" ? Colors.white : Color(0xffF29130),
               func: () {
                 setState(() {
-                  shopping = !shopping;
+                  secilen = "shopping";
                 });
               }),
           SeceneklerButon(
-              basildi: party,
+              basildi: secilen == "party",
               text: " Parti",
               arkaplan: Color(0xff09ACCE),
-              color: party ? Colors.white : Color(0xff09ACCE),
+              color: secilen == "party" ? Colors.white : Color(0xff09ACCE),
               func: () {
                 setState(() {
-                  party = !party;
+                  secilen = "party";
                 });
               }),
           SizedBox(
