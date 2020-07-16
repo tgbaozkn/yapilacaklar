@@ -9,7 +9,13 @@ class YeniGorevModal extends StatefulWidget {
   Function closeFunc, saveFunc; //kapatma fonksiyonu
   Database db; //database e kaydetmek icin
   Function getGorevler;
-  YeniGorevModal({this.closeFunc, this.db, this.saveFunc, this.getGorevler});
+
+  YeniGorevModal({
+    this.closeFunc,
+    this.db,
+    this.saveFunc,
+    this.getGorevler,
+  });
 
   @override
   _YeniGorevModalState createState() => _YeniGorevModalState();

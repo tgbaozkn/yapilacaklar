@@ -6,7 +6,7 @@ import '../../Anasayfa/ui/Gorev.dart';
 
 class AppBarTwo extends StatefulWidget {
   int gorevsayisi = 0;
-  List<Gorev> gorevler;
+  List<Gorev> gorevler = [];
   AppBarTwo(
       {this.gorevsayisi, //kac gorev kaldigini gosterir
       this.gorevler});

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yapilacaklar/Anasayfa/ui/yenigorev.dart';
 import 'package:yapilacaklar/Projeler/ui/proje_kategori.dart';
 import '../Anasayfa/ui/altmenubar.dart';
 import './ui/appbar2.dart';
@@ -13,46 +14,35 @@ import 'ui/icons/Parti.dart';
 import '../Anasayfa/ui/Gorev.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Projeler extends StatefulWidget {
-  Projeler({
-    this.db,
-  });
+class Kategoriler extends StatefulWidget {
+  Kategoriler({this.db, this.gorevler});
   Database db;
+  List<Gorev> gorevler = [];
+
   @override
-  _ProjelerState createState() => _ProjelerState();
+  _KategorilerState createState() => _KategorilerState();
 }
 
-class _ProjelerState extends State<Projeler> {
+class _KategorilerState extends State<Kategoriler> {
   double gorevyazMargin = 1;
   double opacity = 0;
-  bool gorunur, projekategori = false;
-  List<Gorev> gorevler = [];
-  int count = 0;
-  getGorevler() async {
-    gorevler = [];
-    //gorevleri oku
-    List<Map> projelerQuery = //gorevleri sorgula
-        await widget.db.rawQuery(//otomatik key ataması in sql
-            //delete ve update
-            "SELECT * FROM projeler"); //db tabanından sorgula gorevler uzerinden * tüm hepsi anlamına gelir
-    //gorevlerdeki tüm listeyi oku
+  bool gorunur = false;
+  bool projekategori = false;
+  String kategori = "";
+  String baslik = "";
+  List kategorisayisi = [];
+  getKategoriSayisi() async {
+    List<Map> kategoriQuery = await widget.db
+        .rawQuery("SELECT kategori FROM gorevler WHERE kategori = 'kisisel' ");
+    setState(() {
+      kategorisayisi.add(kategoriQuery);
+    });
+  }
 
-    for (var i in projelerQuery) {
-      //indexleme
-      String name = i["name"]; //0 indexten ne kadar girildiyse göster
-      int id = i["id"];
-      String kategori = i["kategori"];
-
-      Gorev yeniGorev = Gorev(
-          id: id, title: name, kategori: kategori); //gosterilecek sınıflandırma
-
-      setState(() {
-        print("Projeler Okundu");
-        gorevler.add(yeniGorev); //gorevlere yenisini ekle .
-
-        //print("id : $id"); //idler farkli
-      });
-    }
+  @override
+  void initState() {
+    getKategoriSayisi();
+    super.initState();
   }
 
   @override
@@ -68,8 +58,9 @@ class _ProjelerState extends State<Projeler> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 AppBarTwo(
-                  gorevler: gorevler,
-                  gorevsayisi: gorevler == null ? 0 : gorevler.length,
+                  gorevler: widget.gorevler,
+                  gorevsayisi:
+                      widget.gorevler == null ? 0 : widget.gorevler.length,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -87,52 +78,126 @@ class _ProjelerState extends State<Projeler> {
                       SizedBox(
                         width: en * 0.4,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            gorevyazMargin = 0.14;
-                            opacity = 0.5;
-                          });
-                        },
-                        child: Container(
-                          width: en * 0.36,
-                          height: boy * 0.032,
-                          child: Center(
-                              child: Text(
-                            "Yeni Proje",
-                            style: TextStyle(
-                              fontFamily: 'Rubik-Medium',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize:
-                                  MediaQuery.of(context).size.height * 0.018,
-                            ),
-                          )),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFF857C3),
-                                Color(0xFFE0139C),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 9,
-                                  offset: Offset(0, 7),
-                                  color: Color(0xFFF456C3).withOpacity(0.47)),
-                            ],
-                          ),
-                        ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       gorevyazMargin = 0.14;
+                      //       opacity = 0.5;
+                      //     });
+                      //   },
+                      //   child: Container(
+                      //     width: en * 0.36,
+                      //     height: boy * 0.032,
+                      //     child: Center(
+                      //         child: Text(
+                      //       "Yeni Proje",
+                      //       style: TextStyle(
+                      //         fontFamily: 'Rubik-Medium',
+                      //         fontWeight: FontWeight.bold,
+                      //         color: Colors.white,
+                      //         fontSize:
+                      //             MediaQuery.of(context).size.height * 0.018,
+                      //       ),
+                      //     )),
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(5),
+                      //       gradient: LinearGradient(
+                      //         colors: [
+                      //           Color(0xFFF857C3),
+                      //           Color(0xFFE0139C),
+                      //         ],
+                      //       ),
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //             blurRadius: 9,
+                      //             offset: Offset(0, 7),
+                      //             color: Color(0xFFF456C3).withOpacity(0.47)),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          container(context,
+                              widget: Kisisel(),
+                              task: "${kategorisayisi.length} task",
+                              text: "Kişisel", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "Kişisel";
+                              kategori = "kisisel";
+                            });
+                          }),
+                          container(context,
+                              widget: Is(),
+                              task: "${kategorisayisi.length} task",
+                              text: "İş", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "İş";
+                              kategori = "work";
+                            });
+                          }),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          container(context,
+                              widget: Bulusma(),
+                              task: "${kategorisayisi.length} task",
+                              text: "Buluşma", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "Buluşma";
+                              kategori = "meet";
+                            });
+                          }),
+                          container(context,
+                              widget: Alisveris(),
+                              task: "${kategorisayisi.length} task",
+                              text: "Alışveriş", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "Alışveriş";
+                              kategori = "shopping";
+                            });
+                          }),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          container(context,
+                              widget: Parti(),
+                              task: "${kategorisayisi.length} task",
+                              text: "Parti", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "Parti";
+                              kategori = "party";
+                            });
+                          }),
+                          container(context,
+                              widget: Ders(),
+                              task: "${kategorisayisi.length} task",
+                              text: "Ders", onTap: () {
+                            setState(() {
+                              projekategori = true;
+                              baslik = "Ders";
+                              kategori = "ders";
+                            });
+                          }),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                liste(context, sayi: gorevler.length, onTap: () {
-                  setState(() {
-                    projekategori = true;
-                  });
-                }),
                 SizedBox(
                   height: boy * 0.1,
                 )
@@ -155,7 +220,6 @@ class _ProjelerState extends State<Projeler> {
             sayfaGecis: () {
               setState(() {
                 gorunur = false;
-                print("a");
               });
             },
             gorevekle: () {
@@ -176,28 +240,26 @@ class _ProjelerState extends State<Projeler> {
         else
           Container(),
         AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
-          margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * gorevyazMargin),
-          child: YeniProje(
-            db: widget.db,
-            onTap: () {
-              setState(
-                () {
-                  gorevyazMargin = 1;
-                  opacity = 0;
-                },
-              );
-            },
-            olustur: getGorevler,
-          ),
-        ),
+            duration: const Duration(milliseconds: 400),
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * gorevyazMargin),
+            child: YeniGorevModal(
+              db: widget.db,
+              closeFunc: () {
+                setState(
+                  () {
+                    gorevyazMargin = 1;
+                    opacity = 0;
+                  },
+                );
+              },
+            )),
         if (gorunur)
           AnimatedContainer(
             height: double.infinity,
             width: double.infinity,
             duration: Duration(milliseconds: 400),
-            child: Projeler(),
+            child: Kategoriler(),
           )
         else
           Container(),
@@ -209,64 +271,21 @@ class _ProjelerState extends State<Projeler> {
           Container(),
         Visibility(
           child: ProjeKategori(
+              kategori: kategori,
+              projeList: widget.gorevler,
+              db: widget.db,
               close: () {
                 setState(() {
                   projekategori = false;
                 });
               },
-              text: "Kişisel" //#TODO:database den isim olarak çek,
+              text: baslik //#TODO: sirala eger baslik == kategori ise
               ),
           visible: projekategori,
         )
       ],
     );
   }
-}
-
-Widget liste(BuildContext context, {int sayi, Function onTap}) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-        Row(
-          children: [
-            container(context,
-                widget: Kisisel(),
-                task: "$sayi task",
-                text: "Kişisel",
-                onTap: onTap),
-            container(context,
-                widget: Is(), task: "$sayi task", text: "İş", onTap: onTap),
-          ],
-        ),
-        Row(
-          children: [
-            container(context,
-                widget: Bulusma(),
-                task: "$sayi task",
-                text: "Buluşma",
-                onTap: onTap),
-            container(context,
-                widget: Alisveris(),
-                task: "$sayi task",
-                text: "Alışveriş",
-                onTap: onTap),
-          ],
-        ),
-        Row(
-          children: [
-            container(context,
-                widget: Parti(),
-                task: "$sayi task",
-                text: "Parti",
-                onTap: onTap),
-            container(context,
-                widget: Ders(), task: "$sayi task", text: "Ders", onTap: onTap),
-          ],
-        ),
-      ],
-    ),
-  );
 }
 
 Widget container(BuildContext context,

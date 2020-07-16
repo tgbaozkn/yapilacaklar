@@ -20,6 +20,7 @@ class YeniProje extends StatefulWidget {
 
 class _YeniProjeState extends State<YeniProje> {
   String isim = "";
+  String secilen = "";
 
   @override
   Widget build(BuildContext context) {
@@ -113,20 +114,84 @@ class _YeniProjeState extends State<YeniProje> {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Transform.scale(scale: 0.8, child: ikonlar(context))
-                  ],
-                ),
+                child: Transform.scale(
+                    scale: 0.8,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Alisveris(
+                          onTap: () {
+                            setState(() {
+                              secilen = "alisveris";
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: en * 0.0346,
+                        ),
+                        Bulusma(
+                          onTap: () {
+                            setState(() {
+                              secilen = "bulusma";
+                            });
+                          },
+                        ), //bulusma
+                        SizedBox(
+                          width: en * 0.0346,
+                        ),
+                        Kisisel(
+                          onTap: () {
+                            setState(() {
+                              secilen = "kisisel";
+                            });
+                          },
+                        ), //kişisel
+                        SizedBox(
+                          width: en * 0.0346,
+                        ),
+                        Is(
+                          onTap: () {
+                            setState(() {
+                              secilen = "is";
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: en * 0.0346,
+                        ),
+                        Parti(
+                          onTap: () {
+                            setState(() {
+                              secilen = "parti";
+                            });
+                          },
+                        ), //kişisel
+                        SizedBox(
+                          width: en * 0.0346,
+                        ),
+                        Ders(
+                          onTap: () {
+                            setState(() {
+                              secilen = "ders";
+                            });
+                          },
+                        ), //iş
+                        SizedBox(
+                          width: en * 0.646,
+                        ),
+                      ],
+                    )),
               ),
               SizedBox(height: boy * 0.098),
               Padding(
                 padding: EdgeInsets.only(left: 18),
                 child: olustur(context, () {
                   widget.olustur();
+                  widget.onTap();
                   print(isim);
+                  print(secilen);
                   widget.db.rawInsert(
-                      "INSERT INTO projeler(name) VALUES('$isim');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
+                      "INSERT INTO projeler(name,kategori) VALUES('$isim','$secilen');"); //idsini otomatik belirle ve gorevlerin içine giirlen ismi name olarak ata.
                 }),
               ),
             ],
@@ -172,34 +237,35 @@ Widget olustur(BuildContext context, Function func) {
   );
 }
 
-Widget ikonlar(BuildContext context) {
-  double en = MediaQuery.of(context).size.width;
-  return Row(
-    children: [
-      Alisveris(),
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      Bulusma(), //bulusma
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      Kisisel(), //kişisel
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      Is(),
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      Parti(), //kişisel
-      SizedBox(
-        width: en * 0.0346,
-      ),
-      Ders(), //iş
-      SizedBox(
-        width: en * 0.646,
-      ),
-    ],
-  );
-}
+// Widget ikonlar(BuildContext context) {
+//   double en = MediaQuery.of(context).size.width;
+//   return Row(
+//     mainAxisSize: MainAxisSize.min,
+//     children: [
+//       Alisveris(),
+//       SizedBox(
+//         width: en * 0.0346,
+//       ),
+//       Bulusma(), //bulusma
+//       SizedBox(
+//         width: en * 0.0346,
+//       ),
+//       Kisisel(), //kişisel
+//       SizedBox(
+//         width: en * 0.0346,
+//       ),
+//       Is(),
+//       SizedBox(
+//         width: en * 0.0346,
+//       ),
+//       Parti(), //kişisel
+//       SizedBox(
+//         width: en * 0.0346,
+//       ),
+//       Ders(), //iş
+//       SizedBox(
+//         width: en * 0.646,
+//       ),
+//     ],
+//   );
+// }

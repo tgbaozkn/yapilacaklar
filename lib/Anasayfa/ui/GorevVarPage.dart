@@ -4,15 +4,18 @@ import '../../Projeler/ui/appbar2.dart';
 import 'Gorev.dart';
 import 'package:sqflite/sqflite.dart';
 
-class GorevVar extends StatefulWidget {
+class GorevVarPage extends StatefulWidget {
+  //rename symbol
   List<Gorev> gorevler;
-  String kategori;
   Database db;
   Function getGorevler;
-  int id;
-  GorevVar({this.gorevler, this.db, this.getGorevler, this.id, this.kategori});
+  GorevVarPage({
+    this.gorevler,
+    this.db,
+    this.getGorevler,
+  });
   @override
-  _GorevVarState createState() => _GorevVarState();
+  _GorevVarPageState createState() => _GorevVarPageState();
 }
 
 Color getHangiColor(String kategori) {
@@ -42,30 +45,46 @@ Color getHangiColor(String kategori) {
 
 Icon getHangiDurum(int durum) {
   switch (durum) {
-    case 1:
+    case 0:
       return Icon(Icons.check_circle);
       break;
-    case 2:
+    case 1:
       return Icon(Icons.gps_not_fixed);
       break;
+    default:
+      return Icon(
+        Icons.gps_not_fixed,
+      );
   }
 }
 
 Color durumRengi(int durum) {
   switch (durum) {
-    case 1:
+    case 0:
       return Color(0xff91DC5A);
       break;
-    case 2:
+    case 1:
       return Color(0xffD9D9D9);
       break;
+    default:
+      return Color(0xffD9D9D9);
   }
 }
 
-class _GorevVarState extends State<GorevVar> {
+String canDurumu(int can) {
+  switch (can) {
+    case 0:
+      return _svg_yqb6y3;
+    case 1:
+      return _svg_yqb6y4;
+    default:
+      return _svg_yqb6y3;
+  }
+}
+
+class _GorevVarPageState extends State<GorevVarPage> {
   double right = 8;
   bool can = false;
-  bool todo = false;
   @override
   Widget build(
     BuildContext context,
@@ -109,24 +128,18 @@ class _GorevVarState extends State<GorevVar> {
                                   width: en * 0.9,
                                   height: boy * 0.08,
                                   child: Row(children: [
-                                    if (todo)
-                                      IconButton(
-                                          color: Color(0xff91DC5A),
-                                          icon: Icon(Icons.check_circle),
-                                          onPressed: () {
-                                            setState(() {
-                                              todo = !todo;
-                                            });
-                                          })
-                                    else
-                                      IconButton(
-                                          icon: Icon(Icons.gps_not_fixed),
-                                          color: Color(0xffD9D9D9),
-                                          onPressed: () {
-                                            setState(() {
-                                              todo = !todo;
-                                            });
-                                          }),
+                                    IconButton(
+                                        color: durumRengi(gorev.durum),
+                                        icon: getHangiDurum(gorev.durum),
+                                        onPressed: () {
+                                          setState(() {
+                                            gorev.durum =
+                                                gorev.durum == 0 ? 1 : 0;
+                                          });
+                                          widget.db.rawUpdate(
+                                              "UPDATE gorevler SET durum = ${gorev.durum} WHERE id = ${gorev.id}");
+                                          widget.getGorevler();
+                                        }),
                                     Text(
                                       gorev.date == null ? "" : gorev.date,
                                     ),
@@ -136,13 +149,13 @@ class _GorevVarState extends State<GorevVar> {
                                     Text(
                                       gorev.title == null ? "" : gorev.title,
                                       style: TextStyle(
-                                          decoration: todo
+                                          decoration: gorev.durum == 0
                                               ? TextDecoration.lineThrough
                                               : TextDecoration.none,
                                           fontSize: boy * 0.022,
                                           fontFamily: 'Rubik-Medium',
                                           fontWeight: FontWeight.bold,
-                                          color: todo
+                                          color: gorev.durum == 0
                                               ? Color(0xffC3C1C1)
                                               : Color(0xff554E8F)),
                                     ),
@@ -159,8 +172,8 @@ class _GorevVarState extends State<GorevVar> {
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
                                       widget.db.rawDelete(
-                                          "DELETE FROM gorevler WHERE id = ${widget.id}");
-                                      print(widget.id);
+                                          "DELETE FROM gorevler WHERE id = ${gorev.id}");
+
                                       print("silindi");
                                       widget.getGorevler();
                                     }),
@@ -171,15 +184,14 @@ class _GorevVarState extends State<GorevVar> {
                             left: en * 0.85,
                             top: boy * 0.045,
                             child: GestureDetector(
-                              key: Key(widget.id.toString()),
                               onTap: () {
-                                setState(() {
-                                  can = !can;
-                                  print(can);
-                                });
+                                gorev.can = gorev.can == 0 ? 1 : 0;
+                                widget.db.rawUpdate(
+                                    "UPDATE gorevler SET can = ${gorev.can} WHERE id = ${gorev.id}");
+                                widget.getGorevler();
                               },
                               child: SvgPicture.string(
-                                can ? _svg_yqb6y4 : _svg_yqb6y3,
+                                canDurumu(gorev.can),
                                 allowDrawingOutsideViewBox: true,
                               ),
                             ),
@@ -188,7 +200,7 @@ class _GorevVarState extends State<GorevVar> {
                             top: boy * 0.013,
                             left: en * 0.035,
                             child: Container(
-                              color: getHangiColor(widget.kategori),
+                              color: getHangiColor(gorev.kategori),
                               height: boy * 0.08,
                               width: en * 0.02,
                             ),

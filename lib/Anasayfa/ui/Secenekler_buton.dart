@@ -32,10 +32,11 @@ class _SeceneklerButonState extends State<SeceneklerButon> {
               )
             : Container(),
         GestureDetector(
-          key: Key(widget.text),
+          key: Key(widget
+              .text), //note: disaridan gesture detectora ulasilmak istenirse kullanilir.
           onTap: () {
             print(widget.text);
-            widget.func();
+            widget.func(); //#TODO: func yı isimlndir
           },
           child: Padding(
             padding: EdgeInsets.fromLTRB(30, 22, 0, 17),
